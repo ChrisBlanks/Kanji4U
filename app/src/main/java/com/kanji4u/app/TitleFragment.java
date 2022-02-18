@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.kanji4u.app.R;
-import com.kanji4u.app.databinding.FragmentFirstBinding;
+import com.kanji4u.app.databinding.FragmentTitleBinding;
 
-public class FirstFragment extends Fragment {
+public class TitleFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentTitleBinding binding;
 
     @Override
     public View onCreateView(
@@ -22,7 +21,7 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentTitleBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -33,8 +32,8 @@ public class FirstFragment extends Fragment {
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(TitleFragment.this)
+                        .navigate(R.id.action_TitleFragment_to_LessonNavigationFragment);
             }
         });
     }

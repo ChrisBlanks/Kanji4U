@@ -6,8 +6,13 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1046875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1453287197231834" />
-        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1503623188405797" />
+        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_lesson_navigation.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/fragment_lessons.xml" value="0.10009057971014493" />
+        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/lesson_nav_row.xml" value="0.1109375" />
+        <entry key="app/src/main/res/layout/lesson_row.xml" value="0.33" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.25" />
       </map>
     </option>
   </component>

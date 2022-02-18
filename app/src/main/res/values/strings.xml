@@ -7,10 +7,12 @@
     <string name="next">Start</string>
     <string name="previous">Back</string>
 
-    <string name="hello_first_fragment">Kanji 4 U</string>
+    <string name="hello_first_fragment">Kanji4U</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="kanji_dict_file">kanjidic</string>
     <string name="frag_1_bg_content_descript">Background Image</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
