@@ -2,8 +2,10 @@
     <string name="app_name">Kanji4U</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">Kanji4U</string>
-    <string name="second_fragment_label">Kanji4U - Study Area</string>
+    <string name="title_fragment_label">Kanji4U</string>
+    <string name="lesson_navigation_fragment_label">Kanji4U - Study Area</string>
+    <string name="lessons_fragment_label">Kanji4u - Lessons</string>
+    <string name="kanji_display_fragment_label">Kanji</string>
     <string name="next">Start</string>
     <string name="previous">Back</string>
 

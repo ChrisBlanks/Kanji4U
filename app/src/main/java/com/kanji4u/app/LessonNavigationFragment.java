@@ -31,16 +31,10 @@ public class LessonNavigationFragment extends Fragment {
     private RecyclerView lessonRecycleView;
     private LessonNavigationViewAdapter lessonAdapter;
 
-
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-
+    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentLessonNavigationBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -58,12 +52,19 @@ public class LessonNavigationFragment extends Fragment {
         lessonRows.add( new RowFeedItem("JLPT N3"));
         lessonRows.add( new RowFeedItem("JLPT N2"));
         lessonRows.add( new RowFeedItem("JLPT N1"));
+        lessonRows.add( new RowFeedItem("Miscellaneous"));
 
         lessonAdapter = new LessonNavigationViewAdapter(view.getContext(),lessonRows);
         lessonAdapter.setRowItemListener(new OnRowItemClickListener() {
             @Override
             public void onRowItemClick(RowFeedItem row) {
                 Log.i("Lesson Nav Selection", "Selected: " + row.getRowTitle());
+
+                Bundle selection = new Bundle();
+                selection.putString("row_selection", row.getRowTitle());
+
+                NavHostFragment.findNavController(LessonNavigationFragment.this)
+                        .navigate(R.id.action_LessonNavigationFragment_to_lessonsFragment,selection);
             }
         });
         lessonRecycleView.setAdapter(lessonAdapter);

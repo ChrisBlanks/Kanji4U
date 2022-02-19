@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/TitleFragment"
         android:name="com.kanji4u.app.TitleFragment"
-        android:label="@string/first_fragment_label"
+        android:label="@string/title_fragment_label"
         tools:layout="@layout/fragment_title">
 
         <action
@@ -18,11 +18,23 @@
     <fragment
         android:id="@+id/LessonNavigationFragment"
         android:name="com.kanji4u.app.LessonNavigationFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/lesson_navigation_fragment_label"
         tools:layout="@layout/fragment_lesson_navigation">
 
         <action
             android:id="@+id/action_LessonNavigationFragment_to_TitleFragment"
             app:destination="@id/TitleFragment" />
+        <action
+            android:id="@+id/action_LessonNavigationFragment_to_lessonsFragment"
+            app:destination="@id/lessonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lessonsFragment"
+        android:name="com.kanji4u.app.LessonsFragment"
+        android:label="@string/lessons_fragment_label"
+        tools:layout="@layout/fragment_lessons" >
+        <action
+            android:id="@+id/action_lessonsFragment_to_LessonNavigationFragment"
+            app:destination="@id/LessonNavigationFragment" />
     </fragment>
 </navigation>
