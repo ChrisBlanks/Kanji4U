@@ -21,6 +21,19 @@ public class LessonNavigationViewAdapter extends RecyclerView.Adapter<LessonNavi
         this.context = context;
     }
 
+    @Override
+    public int getItemCount(){
+        return (null != rowFeedItemList ? rowFeedItemList.size() : 0);
+    }
+
+    public OnRowItemClickListener getRowItemListener() {
+        return this.rowItemListener;
+    }
+
+    public void setRowItemListener(OnRowItemClickListener rowListener){
+        this.rowItemListener = rowListener;
+    }
+
     /**
      * Inflates the view
      * @param viewGroup
@@ -43,7 +56,6 @@ public class LessonNavigationViewAdapter extends RecyclerView.Adapter<LessonNavi
     public void onBindViewHolder(CustomViewHolder customViewHolder, int i){
         RowFeedItem row = this.rowFeedItemList.get(i);
 
-        //do something with value
         String lessonName = row.getRowTitle();
         customViewHolder.textView.setText(lessonName);
 
@@ -57,18 +69,6 @@ public class LessonNavigationViewAdapter extends RecyclerView.Adapter<LessonNavi
         customViewHolder.textView.setOnClickListener(listener);
     }
 
-    @Override
-    public int getItemCount(){
-        return (null != rowFeedItemList ? rowFeedItemList.size() : 0);
-    }
-
-    public OnRowItemClickListener getRowItemListener() {
-        return this.rowItemListener;
-    }
-
-    public void setRowItemListener(OnRowItemClickListener rowListener){
-        this.rowItemListener = rowListener;
-    }
 
     class CustomViewHolder extends RecyclerView.ViewHolder{
         protected TextView textView;

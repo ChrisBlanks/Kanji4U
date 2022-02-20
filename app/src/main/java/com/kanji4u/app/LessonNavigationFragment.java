@@ -1,12 +1,7 @@
 package com.kanji4u.app;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +22,9 @@ public class LessonNavigationFragment extends Fragment {
 
     private FragmentLessonNavigationBinding binding;
 
-    private List<RowFeedItem> lessonRows;
-    private RecyclerView lessonRecycleView;
-    private LessonNavigationViewAdapter lessonAdapter;
+    private List<RowFeedItem> lessonNavigationRows;
+    private RecyclerView lessonNavigationRecycleView;
+    private LessonNavigationViewAdapter lessonNavigationViewAdapter;
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,21 +36,21 @@ public class LessonNavigationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //setup recycleview
-        lessonRecycleView = (RecyclerView) view.findViewById(R.id.lesson_recycle);
-        lessonRecycleView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        lessonNavigationRecycleView = (RecyclerView) view.findViewById(R.id.lesson_navigation_recycle);
+        lessonNavigationRecycleView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        lessonRows = new ArrayList<>();
+        lessonNavigationRows = new ArrayList<>();
 
         //create rows
-        lessonRows.add( new RowFeedItem("JLPT N5"));
-        lessonRows.add( new RowFeedItem("JLPT N4"));
-        lessonRows.add( new RowFeedItem("JLPT N3"));
-        lessonRows.add( new RowFeedItem("JLPT N2"));
-        lessonRows.add( new RowFeedItem("JLPT N1"));
-        lessonRows.add( new RowFeedItem("Miscellaneous"));
+        lessonNavigationRows.add( new RowFeedItem("JLPT N5"));
+        lessonNavigationRows.add( new RowFeedItem("JLPT N4"));
+        lessonNavigationRows.add( new RowFeedItem("JLPT N3"));
+        lessonNavigationRows.add( new RowFeedItem("JLPT N2"));
+        lessonNavigationRows.add( new RowFeedItem("JLPT N1"));
+        lessonNavigationRows.add( new RowFeedItem("Miscellaneous"));
 
-        lessonAdapter = new LessonNavigationViewAdapter(view.getContext(),lessonRows);
-        lessonAdapter.setRowItemListener(new OnRowItemClickListener() {
+        lessonNavigationViewAdapter = new LessonNavigationViewAdapter(view.getContext(), lessonNavigationRows);
+        lessonNavigationViewAdapter.setRowItemListener(new OnRowItemClickListener() {
             @Override
             public void onRowItemClick(RowFeedItem row) {
                 Log.i("Lesson Nav Selection", "Selected: " + row.getRowTitle());
@@ -67,7 +62,7 @@ public class LessonNavigationFragment extends Fragment {
                         .navigate(R.id.action_LessonNavigationFragment_to_lessonsFragment,selection);
             }
         });
-        lessonRecycleView.setAdapter(lessonAdapter);
+        lessonNavigationRecycleView.setAdapter(lessonNavigationViewAdapter);
 
     }
 

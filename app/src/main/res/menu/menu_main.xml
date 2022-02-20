@@ -8,4 +8,15 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/darkmode"
+        android:orderInCategory="100"
+        android:title="@string/darkmode"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/lightmode"
+        android:orderInCategory="100"
+        android:title="@string/lightmode"
+        app:showAsAction="never" />
 </menu>

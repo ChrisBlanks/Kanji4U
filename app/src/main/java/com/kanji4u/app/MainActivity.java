@@ -1,19 +1,17 @@
 package com.kanji4u.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
+import android.util.Log;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.kanji4u.app.databinding.ActivityMainBinding;
 
@@ -24,12 +22,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.InputStream;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private boolean isDarkMode = false;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor prefsEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,17 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //setup preferences
+        prefs = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        prefsEditor = prefs.edit();
+
+        //receive dark mode state from storage
+        isDarkMode = prefs.getBoolean("isDarkMode", false);
+        if(isDarkMode) { //if dark mode was set last, set dark mode
+            Log.i("Darkmode", "Dark mode on");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
 
         setSupportActionBar(binding.toolbar);
 
@@ -51,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         KanjiCollection dict = new KanjiCollection();
         dict.loadKanjiDictionary(KanjiDictionary.KANJIDIC , iStream);
+        //To-Do: Either store dictionary content into cache storage or database to access elsewhere in the app
+
     }
 
     @Override
@@ -70,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if(id == R.id.darkmode){
+            Log.i("Darkmode","Dark mode on");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            prefsEditor.putBoolean("isDarkMode",true);
+            prefsEditor.apply();
+        } else if(id == R.id.lightmode){
+            Log.i("lightmode", "Dark mode off");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            prefsEditor.putBoolean("isDarkMode",false);
+            prefsEditor.apply();
         }
 
         return super.onOptionsItemSelected(item);

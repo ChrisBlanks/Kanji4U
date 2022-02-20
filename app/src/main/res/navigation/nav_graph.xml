@@ -36,5 +36,17 @@
         <action
             android:id="@+id/action_lessonsFragment_to_LessonNavigationFragment"
             app:destination="@id/LessonNavigationFragment" />
+        <action
+            android:id="@+id/action_lessonsFragment_to_kanjiDisplayFragment"
+            app:destination="@id/kanjiDisplayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kanjiDisplayFragment"
+        android:name="com.kanji4u.app.KanjiDisplayFragment"
+        android:label="Kanji Study"
+        tools:layout="@layout/fragment_kanji_display" >
+        <action
+            android:id="@+id/action_kanjiDisplayFragment_to_lessonsFragment"
+            app:destination="@id/lessonsFragment" />
     </fragment>
 </navigation>

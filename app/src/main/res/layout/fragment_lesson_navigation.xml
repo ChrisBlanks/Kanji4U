@@ -7,7 +7,7 @@
     tools:context="com.kanji4u.app.LessonNavigationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lesson_recycle"
+        android:id="@+id/lesson_navigation_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
