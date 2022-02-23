@@ -12,9 +12,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.room.Room;
 
 import com.kanji4u.app.databinding.ActivityMainBinding;
 
+import com.kanji4u.database.Kanji4UDatabase;
+import com.kanji4u.database.KanjiDao;
 import com.kanji4u.kanji.KanjiCollection;
 import com.kanji4u.kanji.KanjiDictionary;
 
@@ -22,11 +25,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
+    private static int NUM_OF_THREADS = 4;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private Kanji4UDatabase kanjiDB;
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(MainActivity.NUM_OF_THREADS);
 
     private boolean isDarkMode = false;
     private SharedPreferences prefs;
@@ -56,15 +66,17 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        //load kanji dictionary
-        String resourcePath = String.format("%s:raw/%s", getPackageName(),getString(R.string.kanji_dict_file) );
-        int resourceId = getResources().getIdentifier(resourcePath, null, null);
-        InputStream iStream = getResources().openRawResource(resourceId);
+        //setup database
+        this.kanjiDB = Room.databaseBuilder(getApplicationContext(),Kanji4UDatabase.class,"Kanji4U-Database").build();
+        KanjiDao kanjiDao =this.kanjiDB.kanjiDao();
 
-        KanjiCollection dict = new KanjiCollection();
-        dict.loadKanjiDictionary(KanjiDictionary.KANJIDIC , iStream);
-        //To-Do: Either store dictionary content into cache storage or database to access elsewhere in the app
-
+        //schedule loading of kanji dictionary in a separate thread in the background
+        this.executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                loadKanjiDictionary();
+            }
+        });
     }
 
     @Override
@@ -104,5 +116,31 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        //To-Do: save any persistent state before app pause is in effect
+
+    }
+
+    // private functions
+
+    /**
+     * Load kanji dictionary
+     */
+    private void loadKanjiDictionary(){
+        //load kanji dictionary
+        String resourcePath = String.format("%s:raw/%s", getPackageName(),getString(R.string.kanji_dict_file) );
+        int resourceId = getResources().getIdentifier(resourcePath, null, null);
+        InputStream iStream = getResources().openRawResource(resourceId);
+
+        KanjiCollection dict = new KanjiCollection();
+        dict.loadKanjiDictionary(KanjiDictionary.KANJIDIC , iStream);
+        //To-Do: Either store dictionary content into cache storage or database to access elsewhere in the app
+        Log.i("Loading Kanji", "Completed loading kanji.");
     }
 }
