@@ -1,0 +1,94 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "f3e8008c789b5c2a8ae22f123bb5c0d0",
+    "entities": [
+      {
+        "tableName": "kanji_entry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `kanji_literal` TEXT, `jis_code` TEXT, `unicode` TEXT, `grade` TEXT, `stroke_num` TEXT, `frequency_rank` TEXT, `jlpt_level` TEXT, `on_readings` TEXT, `kun_readings` TEXT, `english_meanings` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kanjiLiteral",
+            "columnName": "kanji_literal",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "JISCode",
+            "columnName": "jis_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unicode",
+            "columnName": "unicode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade",
+            "columnName": "grade",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "strokeNum",
+            "columnName": "stroke_num",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "frequencyRank",
+            "columnName": "frequency_rank",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "JLPTLevel",
+            "columnName": "jlpt_level",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "onReadings",
+            "columnName": "on_readings",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "kunReadings",
+            "columnName": "kun_readings",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "englishMeanings",
+            "columnName": "english_meanings",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3e8008c789b5c2a8ae22f123bb5c0d0')"
+    ]
+  }
+}

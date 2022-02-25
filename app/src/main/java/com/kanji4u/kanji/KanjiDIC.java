@@ -1,5 +1,7 @@
 package com.kanji4u.kanji;
 
+import com.kanji4u.database.KanjiEntry;
+
 import java.util.ArrayList;
 
 
@@ -67,5 +69,21 @@ public class KanjiDIC  implements Kanji{
                 ", kunReadings=" + kunReadings +
                 ", englishMeanings=" + englishMeanings +
                 '}';
+    }
+
+    /**
+     * Creates KanjiEntry object that can be stored in the app database
+     * @return KanjiEntry object
+     */
+    public KanjiEntry createKanjiEntry(){
+        String kanjiLiteral = kanjiInfo.getKanjiLiteral();
+        String JISCode = kanjiInfo.getJISCode();
+        String unicode = kanjiInfo.getUnicode();
+        String grade = kanjiInfo.getGrade();
+        String strokeNum = kanjiInfo.getStrokeNum();
+        String frequencyRank = kanjiInfo.getFrequencyRank();
+        String JLPTLevel = kanjiInfo.getJLPTLevel();
+        return new KanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
+                this.onReadings, this.kunReadings, this.englishMeanings);
     }
 }

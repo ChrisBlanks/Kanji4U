@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 //declare class as entity that will exist in the database
 //Default name of table is the class name
-@Entity(tableName = "KanjiEntry")
+@Entity(tableName = "kanji_entry")
 public class KanjiEntry {
 
-    //must define a primary key for an entity
+    //must define a primary key for an entity; autogenerates IDs for instances
     @PrimaryKey(autoGenerate = true)
     public int uid;
 
@@ -37,12 +37,25 @@ public class KanjiEntry {
     public String JLPTLevel;
 
     @ColumnInfo(name = "on_readings")
-    private ArrayList<String> onReadings = new ArrayList<>();
+    public ArrayList<String> onReadings = new ArrayList<>();
 
     @ColumnInfo(name = "kun_readings")
-    private ArrayList<String> kunReadings = new ArrayList<>();
+    public ArrayList<String> kunReadings = new ArrayList<>();
 
     @ColumnInfo(name = "english_meanings")
-    private ArrayList<String> englishMeanings = new ArrayList<>();
+    public ArrayList<String> englishMeanings = new ArrayList<>();
 
+
+    public KanjiEntry( String kanjiLiteral, String JISCode, String unicode, String grade, String strokeNum, String frequencyRank, String JLPTLevel, ArrayList<String> onReadings, ArrayList<String> kunReadings, ArrayList<String> englishMeanings) {
+        this.kanjiLiteral = kanjiLiteral;
+        this.JISCode = JISCode;
+        this.unicode = unicode;
+        this.grade = grade;
+        this.strokeNum = strokeNum;
+        this.frequencyRank = frequencyRank;
+        this.JLPTLevel = JLPTLevel;
+        this.onReadings = onReadings;
+        this.kunReadings = kunReadings;
+        this.englishMeanings = englishMeanings;
+    }
 }

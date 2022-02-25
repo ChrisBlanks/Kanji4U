@@ -18,13 +18,16 @@ import com.kanji4u.app.databinding.ActivityMainBinding;
 
 import com.kanji4u.database.Kanji4UDatabase;
 import com.kanji4u.database.KanjiDao;
+import com.kanji4u.database.KanjiEntry;
 import com.kanji4u.kanji.KanjiCollection;
+import com.kanji4u.kanji.KanjiDIC;
 import com.kanji4u.kanji.KanjiDictionary;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDarkMode = false;
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefsEditor;
+
+    private KanjiCollection kanjiDict;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +79,22 @@ public class MainActivity extends AppCompatActivity {
         this.executorService.execute(new Runnable() {
             @Override
             public void run() {
-                loadKanjiDictionary();
+                //Check if database has already been populated in the past
+                // if populated, skip loading kanji and adding to database
+                if(kanjiDao.getAll().size() < 1){
+                    loadKanjiDictionary();
+                    ArrayList<KanjiDIC> kanjiCollection = kanjiDict.getLoadedKanji();
+                    for(KanjiDIC kanji: kanjiCollection){
+                        kanjiDao.insertAll(kanji.createKanjiEntry()); // all kanji into database
+                    }
+                } else{
+                    Log.i("Database","Kanji has been loaded already, so no action needed");
+                }
+
+                Log.i("Database","Kanji loading is completed.");
+                for( KanjiEntry kanji: kanjiDao.findKanjiEntryJLPTLevel("4")){
+                    Log.i("Database Test", "For JLPT 4, found : "+ kanji.kanjiLiteral);
+                }
             }
         });
     }
@@ -130,7 +150,8 @@ public class MainActivity extends AppCompatActivity {
     // private functions
 
     /**
-     * Load kanji dictionary
+     * Loads kanji dictionary for file and creates a dictionary object
+     * @return KanjiCollection object filled with kanji information
      */
     private void loadKanjiDictionary(){
         //load kanji dictionary
@@ -138,9 +159,8 @@ public class MainActivity extends AppCompatActivity {
         int resourceId = getResources().getIdentifier(resourcePath, null, null);
         InputStream iStream = getResources().openRawResource(resourceId);
 
-        KanjiCollection dict = new KanjiCollection();
-        dict.loadKanjiDictionary(KanjiDictionary.KANJIDIC , iStream);
-        //To-Do: Either store dictionary content into cache storage or database to access elsewhere in the app
+        this.kanjiDict = new KanjiCollection();
+        this.kanjiDict.loadKanjiDictionary(KanjiDictionary.KANJIDIC , iStream);
         Log.i("Loading Kanji", "Completed loading kanji.");
     }
 }

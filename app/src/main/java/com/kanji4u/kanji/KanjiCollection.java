@@ -12,13 +12,18 @@ import java.util.regex.Pattern;
 
 public class KanjiCollection {
 
-    ArrayList<KanjiDIC> loadedKanji;
+    private ArrayList<KanjiDIC> loadedKanji;
 
     public KanjiCollection(){
         this.loadedKanji = new ArrayList<>();
     }
 
+    public KanjiCollection(ArrayList<KanjiDIC> kanji){this.loadedKanji = kanji; }
     //public functions
+
+    public ArrayList<KanjiDIC> getLoadedKanji(){
+        return this.loadedKanji;
+    }
 
     /**
      * Loads a kanji dictionary of type 'dictType' from input stream and stores it in memory.
