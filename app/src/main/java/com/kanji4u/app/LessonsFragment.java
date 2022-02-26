@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kanji4u.app.databinding.FragmentLessonsBinding;
+import com.kanji4u.database.Kanji4UDatabase;
 
 import java.util.ArrayList;
 import java.util.List;

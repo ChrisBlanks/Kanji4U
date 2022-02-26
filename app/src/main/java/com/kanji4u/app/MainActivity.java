@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -16,6 +18,7 @@ import androidx.room.Room;
 
 import com.kanji4u.app.databinding.ActivityMainBinding;
 
+import com.kanji4u.database.DatabaseViewModal;
 import com.kanji4u.database.Kanji4UDatabase;
 import com.kanji4u.database.KanjiDao;
 import com.kanji4u.database.KanjiEntry;
@@ -28,6 +31,7 @@ import android.view.MenuItem;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private Kanji4UDatabase kanjiDB;
+    private DatabaseViewModal dbViewModal;
 
     private ExecutorService executorService = Executors.newFixedThreadPool(MainActivity.NUM_OF_THREADS);
 
@@ -71,17 +76,34 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        dbViewModal = new ViewModelProvider(this).get(DatabaseViewModal.class);
+        dbViewModal.getAllKanji().observe(this, new Observer<List<KanjiEntry>>() {
+            @Override
+            public void onChanged(List<KanjiEntry> kanjiEntries) {
+                if(kanjiEntries.size() < 1){ //if no data in datbase, load kanji dictionary from file & store
+                    loadKanjiDictionary();
+                    for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
+                        dbViewModal.insert(kanji.createKanjiEntry());
+                    }
+                    Log.i("Database","Kanji has finished loading into database.");
+                } else{
+                    Log.i("Database","Kanji has been loaded already, so no action needed");
+                }
+            }
+        });
+
         //setup database
         this.kanjiDB = Room.databaseBuilder(getApplicationContext(),Kanji4UDatabase.class,"Kanji4U-Database").build();
         KanjiDao kanjiDao =this.kanjiDB.kanjiDao();
 
+        /*
         //schedule loading of kanji dictionary in a separate thread in the background
         this.executorService.execute(new Runnable() {
             @Override
             public void run() {
                 //Check if database has already been populated in the past
                 // if populated, skip loading kanji and adding to database
-                if(kanjiDao.getAll().size() < 1){
+                if(kanjiDao.getAll().getValue().size() < 1){
                     loadKanjiDictionary();
                     ArrayList<KanjiDIC> kanjiCollection = kanjiDict.getLoadedKanji();
                     for(KanjiDIC kanji: kanjiCollection){
@@ -95,8 +117,12 @@ public class MainActivity extends AppCompatActivity {
                 for( KanjiEntry kanji: kanjiDao.findKanjiEntryJLPTLevel("4")){
                     Log.i("Database Test", "For JLPT 4, found : "+ kanji.kanjiLiteral);
                 }
+
+                //To-Do: Split all kanji into JLPT levels in the database
+                //To-Do: Find best way to allow fragments to access the database
             }
         });
+        */
     }
 
     @Override

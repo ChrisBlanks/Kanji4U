@@ -1,5 +1,6 @@
 package com.kanji4u.database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,7 +21,7 @@ public interface KanjiDao {
      * @return ArrayList of KanjiEntry objects
      */
     @Query("SELECT * FROM kanji_entry")
-    List<KanjiEntry> getAll();
+    LiveData<List<KanjiEntry>> getAll();
 
     /**
      * Select all KanjiEntry data with a matching SHIFT JIS code
@@ -42,7 +43,7 @@ public interface KanjiDao {
     void insertAll(KanjiEntry ... kanji); //... = variable # of argument
 
     @Delete
-    void deleteKanjiEntry(KanjiEntry kanji);
+    void deleteKanjiEntry(KanjiEntry ... kanji);
 
     @Update
     public void updateUsers(KanjiEntry ... kanji);
