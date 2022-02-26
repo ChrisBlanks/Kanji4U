@@ -92,10 +92,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //setup database
-        this.kanjiDB = Room.databaseBuilder(getApplicationContext(),Kanji4UDatabase.class,"Kanji4U-Database").build();
-        KanjiDao kanjiDao =this.kanjiDB.kanjiDao();
-
         /*
         //schedule loading of kanji dictionary in a separate thread in the background
         this.executorService.execute(new Runnable() {

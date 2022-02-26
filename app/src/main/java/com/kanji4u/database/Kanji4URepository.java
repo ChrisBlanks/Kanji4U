@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.kanji4u.kanji.Kanji;
+
 import java.util.List;
 
 public class Kanji4URepository {
@@ -27,8 +29,11 @@ public class Kanji4URepository {
         new UpdateKanjiEntryAsyncTask(kanjiDao).execute(kanji);
     }
 
-    public void delete(KanjiEntry kanji){
-        new DeleteKanjiEntryAsyncTask(kanjiDao).execute(kanji);
+    public void delete(KanjiEntry kanji){ new DeleteKanjiEntryAsyncTask(kanjiDao).execute(kanji); }
+
+
+    public LiveData<List<KanjiEntry>> findKanjiEntryJLPTLevel(KanjiEntry kanji){
+        return this.kanjiList;
     }
 
     public LiveData<List<KanjiEntry>> getAllKanji(){
@@ -88,6 +93,26 @@ public class Kanji4URepository {
         private KanjiDao kanjiDao;
 
         private GetAllKanjiEntryAsyncTask(KanjiDao kanjiDao) {
+            this.kanjiDao = kanjiDao;
+        }
+
+        @Override
+        protected List<KanjiEntry> doInBackground(Void ... voids) {
+            return kanjiDao.getAll().getValue();
+        }
+
+        @Override
+        protected void onPostExecute(List<KanjiEntry> kanji){
+            super.onPostExecute(kanji);
+        }
+
+    }
+
+    // we are creating a async task method to insert new course.
+    private static class FindKanjiEntryByJLPTLevelAsyncTask extends AsyncTask<Void, Void, List<KanjiEntry>> {
+        private KanjiDao kanjiDao;
+
+        private FindKanjiEntryByJLPTLevelAsyncTask(KanjiDao kanjiDao) {
             this.kanjiDao = kanjiDao;
         }
 
