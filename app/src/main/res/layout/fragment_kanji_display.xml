@@ -60,7 +60,6 @@
             android:id="@+id/memorizedCheckbox"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:onClick="onCheckboxClicked"
             android:text="@string/memorize_checkbox_text" />
     </LinearLayout>
 

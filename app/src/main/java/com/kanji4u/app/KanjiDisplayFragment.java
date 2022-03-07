@@ -1,5 +1,6 @@
 package com.kanji4u.app;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -71,9 +72,6 @@ public class KanjiDisplayFragment extends Fragment {
         this.englishMeaningText = view.findViewById(R.id.englishMeaning);
         this.frequencyRankText = view.findViewById(R.id.frequencyRank);
 
-        //Setup initial view
-        updateKanjiDisplayed(view, this.currentKanjiIndex);
-
         //setup lesson navigation callbacks
         this.backButton = (Button) view.findViewById(R.id.backButton);
         this.backButton.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +94,17 @@ public class KanjiDisplayFragment extends Fragment {
                 currentKanjiIndex = newIndex;
             }
         });
+
+        this.memorizedCheckbox = view.findViewById(R.id.memorizedCheckbox);
+        this.memorizedCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onCheckboxClicked(view);
+            }
+        });
+
+        //Setup initial view
+        updateKanjiDisplayed(view, this.currentKanjiIndex);
     }
 
     public void onCheckboxClicked(View view){
@@ -105,6 +114,7 @@ public class KanjiDisplayFragment extends Fragment {
         //To-Do: Need to save this state between fragments (e.g. going back and forth) and long term (storage or db w/ other metadata)
     }
 
+    @SuppressLint("NewApi")
     public void updateKanjiDisplayed(View view, int kanjiIndexToUse){
 
         KanjiEntry initialKanji =  this.kanjiList.get(kanjiIndexToUse);
@@ -117,5 +127,7 @@ public class KanjiDisplayFragment extends Fragment {
 
         String frequencyTextValue = initialKanji.getFrequencyRank().isEmpty() ? "N/A": initialKanji.getFrequencyRank();
         this.frequencyRankText.setText("Frequency Rank: " + frequencyTextValue);
+
+        this.memorizedCheckbox.setChecked(this.memorizedStates[kanjiIndexToUse]);
     }
 }
