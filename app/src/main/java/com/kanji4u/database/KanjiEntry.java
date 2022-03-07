@@ -48,6 +48,86 @@ public class KanjiEntry implements Parcelable {
     @ColumnInfo(name = "english_meanings")
     public ArrayList<String> englishMeanings = new ArrayList<>();
 
+    public String getKanjiLiteral() {
+        return kanjiLiteral;
+    }
+
+    public void setKanjiLiteral(String kanjiLiteral) {
+        this.kanjiLiteral = kanjiLiteral;
+    }
+
+    public String getJISCode() {
+        return JISCode;
+    }
+
+    public void setJISCode(String JISCode) {
+        this.JISCode = JISCode;
+    }
+
+    public String getUnicode() {
+        return unicode;
+    }
+
+    public void setUnicode(String unicode) {
+        this.unicode = unicode;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getStrokeNum() {
+        return strokeNum;
+    }
+
+    public void setStrokeNum(String strokeNum) {
+        this.strokeNum = strokeNum;
+    }
+
+    public String getFrequencyRank() {
+        return frequencyRank;
+    }
+
+    public void setFrequencyRank(String frequencyRank) {
+        this.frequencyRank = frequencyRank;
+    }
+
+    public String getJLPTLevel() {
+        return JLPTLevel;
+    }
+
+    public void setJLPTLevel(String JLPTLevel) {
+        this.JLPTLevel = JLPTLevel;
+    }
+
+    public ArrayList<String> getOnReadings() {
+        return onReadings;
+    }
+
+    public void setOnReadings(ArrayList<String> onReadings) {
+        this.onReadings = onReadings;
+    }
+
+    public ArrayList<String> getKunReadings() {
+        return kunReadings;
+    }
+
+    public void setKunReadings(ArrayList<String> kunReadings) {
+        this.kunReadings = kunReadings;
+    }
+
+    public ArrayList<String> getEnglishMeanings() {
+        return englishMeanings;
+    }
+
+    public void setEnglishMeanings(ArrayList<String> englishMeanings) {
+        this.englishMeanings = englishMeanings;
+    }
+
     @Override
     public String toString() {
         return "KanjiEntry{" +
