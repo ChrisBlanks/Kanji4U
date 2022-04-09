@@ -145,6 +145,19 @@ public class KanjiEntry implements Parcelable {
                 '}';
     }
 
+    /**
+     * Public constructor used for serializing class instance as a parcelable
+     * @param kanjiLiteral Kanji character
+     * @param JISCode JIS code of kanji character
+     * @param unicode Unicode value of kanji character
+     * @param grade Grade rating of kanji character
+     * @param strokeNum Number of strokes to write kanji character
+     * @param frequencyRank Frequency rank of kanji character
+     * @param JLPTLevel JLPT level of kanji character
+     * @param onReadings On (chinese) readings of kanji character
+     * @param kunReadings Kun (japanese) readings of kanji character
+     * @param englishMeanings English meaning(s) of kanji character
+     */
     public KanjiEntry(String kanjiLiteral, String JISCode, String unicode, String grade, String strokeNum, String frequencyRank, String JLPTLevel, ArrayList<String> onReadings, ArrayList<String> kunReadings, ArrayList<String> englishMeanings) {
         this.kanjiLiteral = kanjiLiteral;
         this.JISCode = JISCode;
