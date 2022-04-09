@@ -18,7 +18,7 @@
     <string name="darkmode">Set Dark Mode</string>
     <string name="lightmode">Set Light Mode</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="left_nav_text">Back</string>
-    <string name="right_nav_text">Forward</string>
+    <string name="left_nav_text">&lt;</string>
+    <string name="right_nav_text">&gt;</string>
     <string name="memorize_checkbox_text">Memorized?</string>
 </resources>
