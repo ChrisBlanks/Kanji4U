@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.kanji4u.app.databinding.FragmentKanjiDisplayBinding;
 import com.kanji4u.database.KanjiEntry;
@@ -29,6 +31,8 @@ public class KanjiDisplayFragment extends Fragment {
     private int currentKanjiIndex = 0;
     private int numOfKanji = 0;
     private boolean[] memorizedStates;
+    private String rowSelection;
+    private String jlptLevel;
 
     private FragmentKanjiDisplayBinding binding;
 
@@ -51,8 +55,10 @@ public class KanjiDisplayFragment extends Fragment {
         super.onSaveInstanceState(savedInstanceState);
 
         Bundle bundle =  getArguments();
-        String rowSelection = bundle.getString(KanjiDisplayFragment.ROW_SELECT_BUNDLE_KEY, KanjiDisplayFragment.DEFAULT_ROW_SELECT );
-        Log.i("kanjiDisplayFragment", "Received this row selection: " + rowSelection);
+        this.rowSelection = bundle.getString(KanjiDisplayFragment.ROW_SELECT_BUNDLE_KEY, KanjiDisplayFragment.DEFAULT_ROW_SELECT );
+        Log.i("kanjiDisplayFragment", "Received this row selection: " + this.rowSelection);
+
+        this.jlptLevel = bundle.getString("jlpt");
 
         this.kanjiList = bundle.getParcelableArrayList("kanji");
         this.numOfKanji = this.kanjiList.size();
@@ -64,6 +70,9 @@ public class KanjiDisplayFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        String title = String.format("%s - %s",this.jlptLevel, this.rowSelection);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title );
 
         this.kanjiNumOrderText = view.findViewById(R.id.kanjiNumOrder);
         this.kanjiDisplayText =  view.findViewById(R.id.kanjiDisplay);
