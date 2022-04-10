@@ -46,6 +46,6 @@ public interface KanjiDao {
     void deleteKanjiEntry(KanjiEntry ... kanji);
 
     @Update
-    public void updateUsers(KanjiEntry ... kanji);
+    public void updateKanji(KanjiEntry ... kanji);
 
 }
