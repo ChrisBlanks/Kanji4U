@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -16,9 +18,15 @@ import androidx.room.Room;
 
 import com.kanji4u.app.databinding.ActivityMainBinding;
 
+import com.kanji4u.database.DatabaseViewModal;
+import com.kanji4u.database.JLPTFourKanjiEntry;
+import com.kanji4u.database.JLPTOneKanjiEntry;
+import com.kanji4u.database.JLPTThreeKanjiEntry;
+import com.kanji4u.database.JLPTTwoKanjiEntry;
 import com.kanji4u.database.Kanji4UDatabase;
 import com.kanji4u.database.KanjiDao;
 import com.kanji4u.database.KanjiEntry;
+import com.kanji4u.database.MiscellaneousKanjiEntry;
 import com.kanji4u.kanji.KanjiCollection;
 import com.kanji4u.kanji.KanjiDIC;
 import com.kanji4u.kanji.KanjiDictionary;
@@ -28,6 +36,7 @@ import android.view.MenuItem;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private Kanji4UDatabase kanjiDB;
+    private DatabaseViewModal dbViewModal;
 
     private ExecutorService executorService = Executors.newFixedThreadPool(MainActivity.NUM_OF_THREADS);
 
@@ -71,32 +81,109 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        //setup database
-        this.kanjiDB = Room.databaseBuilder(getApplicationContext(),Kanji4UDatabase.class,"Kanji4U-Database").build();
-        KanjiDao kanjiDao =this.kanjiDB.kanjiDao();
+        //database loading
+        dbViewModal = new ViewModelProvider(this).get(DatabaseViewModal.class);
 
-        //schedule loading of kanji dictionary in a separate thread in the background
-        this.executorService.execute(new Runnable() {
+        dbViewModal.getAllJLPTOneKanji().observe(this, new Observer<List<JLPTOneKanjiEntry>>() {
             @Override
-            public void run() {
-                //Check if database has already been populated in the past
-                // if populated, skip loading kanji and adding to database
-                if(kanjiDao.getAll().size() < 1){
-                    loadKanjiDictionary();
-                    ArrayList<KanjiDIC> kanjiCollection = kanjiDict.getLoadedKanji();
-                    for(KanjiDIC kanji: kanjiCollection){
-                        kanjiDao.insertAll(kanji.createKanjiEntry()); // all kanji into database
+            public void onChanged(List<JLPTOneKanjiEntry> jlptOneKanjiEntries) {
+                if(jlptOneKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                    if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
+                        loadKanjiDictionary();
                     }
-                } else{
-                    Log.i("Database","Kanji has been loaded already, so no action needed");
-                }
 
-                Log.i("Database","Kanji loading is completed.");
-                for( KanjiEntry kanji: kanjiDao.findKanjiEntryJLPTLevel("4")){
-                    Log.i("Database Test", "For JLPT 4, found : "+ kanji.kanjiLiteral);
+                    for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
+                        if(kanji.getKanjiJLPTLevel().equals("1")) {
+                            dbViewModal.insertJLPTOneKanji(kanji.createJLPTOneKanjiEntry());
+                        }
+                    }
+                    Log.i("Database","JLPT 1 Kanji has finished loading into database.");
+                } else{
+                    Log.i("Database","JLPT 1 Kanji has been loaded already, so no action needed");
                 }
             }
         });
+
+        dbViewModal.getAllJLPTTwoKanji().observe(this, new Observer<List<JLPTTwoKanjiEntry>>() {
+            @Override
+            public void onChanged(List<JLPTTwoKanjiEntry> jlptTwoKanjiEntries) {
+                if(jlptTwoKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                    if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
+                        loadKanjiDictionary();
+                    }
+
+                    for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
+                        if(kanji.getKanjiJLPTLevel().equals("2")) {
+                            dbViewModal.insertJLPTTwoKanji(kanji.createJLPTTwoKanjiEntry());
+                        }
+                    }
+                    Log.i("Database","JLPT 2 Kanji has finished loading into database.");
+                } else{
+                    Log.i("Database","JLPT 2 Kanji has been loaded already, so no action needed");
+                }
+            }
+        });
+
+        dbViewModal.getAllJLPTThreeKanji().observe(this, new Observer<List<JLPTThreeKanjiEntry>>() {
+            @Override
+            public void onChanged(List<JLPTThreeKanjiEntry> jlptThreeKanjiEntries) {
+                if( jlptThreeKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                    if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
+                        loadKanjiDictionary();
+                    }
+
+                    for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
+                        if(kanji.getKanjiJLPTLevel().equals("3")) {
+                            dbViewModal.insertJLPTThreeKanji(kanji.createJLPTThreeKanjiEntry());
+                        }
+                    }
+                    Log.i("Database","JLPT 3 Kanji has finished loading into database.");
+                } else{
+                    Log.i("Database","JLPT 3 Kanji has been loaded already, so no action needed");
+                }
+            }
+        });
+
+        dbViewModal.getAllJLPTFourKanji().observe(this, new Observer<List<JLPTFourKanjiEntry>>() {
+            @Override
+            public void onChanged(List<JLPTFourKanjiEntry> jlptFourKanjiEntries) {
+                if(jlptFourKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                    if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
+                        loadKanjiDictionary();
+                    }
+
+                    for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
+                        if(kanji.getKanjiJLPTLevel().equals("4")) {
+                            dbViewModal.insertJLPTFourKanji(kanji.createJLPTFourKanjiEntry());
+                        }
+                    }
+                    Log.i("Database","JLPT 4 Kanji has finished loading into database.");
+                } else{
+                    Log.i("Database","JLPT 4 Kanji has been loaded already, so no action needed");
+                }
+            }
+        });
+
+        dbViewModal.getAllMiscellaneousKanji().observe(this, new Observer<List<MiscellaneousKanjiEntry>>() {
+            @Override
+            public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
+                if(miscellaneousKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                    if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
+                        loadKanjiDictionary();
+                    }
+
+                    for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
+                        if(kanji.getKanjiJLPTLevel().isEmpty()) {
+                            dbViewModal.insertMiscellaneousKanji(kanji.createMisceallaneousKanjiEntry());
+                        }
+                    }
+                    Log.i("Database","Miscellaneous Kanji has finished loading into database.");
+                } else{
+                    Log.i("Database","Miscellaneous Kanji has been loaded already, so no action needed");
+                }
+            }
+        });
+
     }
 
     @Override

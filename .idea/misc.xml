@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/KuRi/StudioProjects/Kanji4U/app/src/main/res/layout/activity_main.xml" value="0.17" />
+        <entry key="..\:/Users/KuRi/StudioProjects/Kanji4U/app/src/main/res/layout/content_main.xml" value="0.11574074074074074" />
+        <entry key="..\:/Users/KuRi/StudioProjects/Kanji4U/app/src/main/res/layout/fragment_kanji_display.xml" value="0.1" />
+        <entry key="..\:/Users/KuRi/StudioProjects/Kanji4U/app/src/main/res/layout/fragment_lesson_navigation.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1046875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.15" />

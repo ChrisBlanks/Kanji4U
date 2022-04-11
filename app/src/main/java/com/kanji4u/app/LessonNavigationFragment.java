@@ -16,9 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kanji4u.app.databinding.FragmentLessonNavigationBinding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LessonNavigationFragment extends Fragment {
+
+    public final static List<String> ROW_NAMES = Arrays.asList("JLPT Level 4",
+                                                                "JLPT Level 3",
+                                                                "JLPT Level 2",
+                                                                "JLPT Level 1",
+                                                                "Miscellaneous Collection 1",
+                                                                "Miscellaneous Collection 2",
+                                                                "Miscellaneous Collection 3",
+                                                                "Miscellaneous Collection 4"
+    );
 
     private FragmentLessonNavigationBinding binding;
 
@@ -42,12 +53,14 @@ public class LessonNavigationFragment extends Fragment {
         lessonNavigationRows = new ArrayList<>();
 
         //create rows
-        lessonNavigationRows.add( new RowFeedItem("JLPT N5"));
-        lessonNavigationRows.add( new RowFeedItem("JLPT N4"));
-        lessonNavigationRows.add( new RowFeedItem("JLPT N3"));
-        lessonNavigationRows.add( new RowFeedItem("JLPT N2"));
-        lessonNavigationRows.add( new RowFeedItem("JLPT N1"));
-        lessonNavigationRows.add( new RowFeedItem("Miscellaneous"));
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(0)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(1)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(2)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(3)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(4)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(5)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(6)) );
+        lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(7)) );
 
         lessonNavigationViewAdapter = new LessonNavigationViewAdapter(view.getContext(), lessonNavigationRows);
         lessonNavigationViewAdapter.setRowItemListener(new OnRowItemClickListener() {

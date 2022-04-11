@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 //declare class as entity that will exist in the database
 //Default name of table is the class name
-@Entity(tableName = "kanji_entry")
-public class KanjiEntry implements Parcelable {
+@Entity(tableName = "jlpt_three_kanji_entry")
+public class JLPTThreeKanjiEntry implements Parcelable {
 
     //must define a primary key for an entity; autogenerates IDs for instances
     @PrimaryKey(autoGenerate = true)
@@ -47,6 +47,17 @@ public class KanjiEntry implements Parcelable {
 
     @ColumnInfo(name = "english_meanings")
     public ArrayList<String> englishMeanings = new ArrayList<>();
+
+    @ColumnInfo(name = "memorized_kanji")
+    public boolean memorizedKanji; //value set from user interacting with app
+
+    public boolean isMemorizedKanji() {
+        return memorizedKanji;
+    }
+
+    public void setMemorizedKanji(boolean memorizedKanji) {
+        this.memorizedKanji = memorizedKanji;
+    }
 
     public String getKanjiLiteral() {
         return kanjiLiteral;
@@ -158,7 +169,7 @@ public class KanjiEntry implements Parcelable {
      * @param kunReadings Kun (japanese) readings of kanji character
      * @param englishMeanings English meaning(s) of kanji character
      */
-    public KanjiEntry(String kanjiLiteral, String JISCode, String unicode, String grade, String strokeNum, String frequencyRank, String JLPTLevel, ArrayList<String> onReadings, ArrayList<String> kunReadings, ArrayList<String> englishMeanings) {
+    public JLPTThreeKanjiEntry(String kanjiLiteral, String JISCode, String unicode, String grade, String strokeNum, String frequencyRank, String JLPTLevel, ArrayList<String> onReadings, ArrayList<String> kunReadings, ArrayList<String> englishMeanings, boolean memorizedKanji) {
         this.kanjiLiteral = kanjiLiteral;
         this.JISCode = JISCode;
         this.unicode = unicode;
@@ -169,10 +180,11 @@ public class KanjiEntry implements Parcelable {
         this.onReadings = onReadings;
         this.kunReadings = kunReadings;
         this.englishMeanings = englishMeanings;
+        this.memorizedKanji = memorizedKanji;
     }
 
     //Parcelable implementation
-    public KanjiEntry(Parcel in){
+    public JLPTThreeKanjiEntry(Parcel in){
         //get uid first
         this.uid = in.readInt();
 
@@ -192,6 +204,7 @@ public class KanjiEntry implements Parcelable {
         this.onReadings = in.readArrayList(new ArrayList<String>().getClass().getClassLoader());
         this.kunReadings = in.readArrayList(new ArrayList<String>().getClass().getClassLoader());
         this.englishMeanings = in.readArrayList(new ArrayList<String>().getClass().getClassLoader());
+        this.memorizedKanji = in.readByte() != 0; //reads byte and determines what boolean was stored as
     }
 
     @Override
@@ -214,16 +227,17 @@ public class KanjiEntry implements Parcelable {
         dest.writeList(this.onReadings);
         dest.writeList(this.kunReadings);
         dest.writeList(this.englishMeanings);
+        dest.writeByte((byte)(this.memorizedKanji ? 1 : 0)); //write byte instead of boolean to support older devices
     }
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Creator CREATOR = new Creator() {
 
-        public KanjiEntry createFromParcel(Parcel in) {
-            return new KanjiEntry(in);
+        public JLPTThreeKanjiEntry createFromParcel(Parcel in) {
+            return new JLPTThreeKanjiEntry(in);
         }
 
-        public KanjiEntry[] newArray(int size) {
-            return new KanjiEntry[size];
+        public JLPTThreeKanjiEntry[] newArray(int size) {
+            return new JLPTThreeKanjiEntry[size];
         }
     };
 }
