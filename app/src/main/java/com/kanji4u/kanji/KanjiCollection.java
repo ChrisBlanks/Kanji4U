@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class KanjiCollection {
 
+    private int numOfKanjiLoaded = 0;
     private ArrayList<KanjiDIC> loadedKanji;
 
     public KanjiCollection(){
@@ -23,6 +24,10 @@ public class KanjiCollection {
 
     public ArrayList<KanjiDIC> getLoadedKanji(){
         return this.loadedKanji;
+    }
+
+    public int getNumberOfKanjiLoaded(){
+        return this.numOfKanjiLoaded;
     }
 
     /**
@@ -180,9 +185,10 @@ public class KanjiCollection {
 
             KanjiInfo kInfo = new KanjiInfo(kanjiLiteral, JISCode,unicode, grade,
                                             strokes, frequencyRank,JLPTLevel);
-            KanjiDIC kanji = new KanjiDIC( kInfo, onReadings, kunReadings, englishMeanings);
+            KanjiDIC kanji = new KanjiDIC( kInfo, onReadings, kunReadings, englishMeanings, false);
             //Log.i("Kanji", kanji.toString());
             this.loadedKanji.add(kanji);
+            this.numOfKanjiLoaded =+ 1; //increment count of kanji
         }
     }
 

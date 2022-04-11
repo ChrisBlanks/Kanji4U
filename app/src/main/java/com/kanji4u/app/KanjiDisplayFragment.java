@@ -17,7 +17,13 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.kanji4u.app.databinding.FragmentKanjiDisplayBinding;
+import com.kanji4u.database.JLPTFourKanjiEntry;
+import com.kanji4u.database.JLPTOneKanjiEntry;
+import com.kanji4u.database.JLPTThreeKanjiEntry;
+import com.kanji4u.database.JLPTTwoKanjiDao;
+import com.kanji4u.database.JLPTTwoKanjiEntry;
 import com.kanji4u.database.KanjiEntry;
+import com.kanji4u.database.MiscellaneousKanjiEntry;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -36,7 +42,7 @@ public class KanjiDisplayFragment extends Fragment {
 
     private FragmentKanjiDisplayBinding binding;
 
-    private ArrayList<KanjiEntry> kanjiList;
+    private ArrayList<?> kanjiList;
 
     TextView kanjiNumOrderText;
     TextView kanjiDisplayText;
@@ -126,17 +132,72 @@ public class KanjiDisplayFragment extends Fragment {
     @SuppressLint("NewApi")
     public void updateKanjiDisplayed(View view, int kanjiIndexToUse){
 
-        KanjiEntry initialKanji =  this.kanjiList.get(kanjiIndexToUse);
+        String kanjiLiteral = "";
+        String onreading= "";
+        String kunReading = "";
+        String englishMeaning= "";
+        String frequencyRank= "";
+
+        if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
+            JLPTFourKanjiEntry kanji = (JLPTFourKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+            kanjiLiteral = kanji.getKanjiLiteral();
+            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1)) ){  //JLPT level 3
+            JLPTThreeKanjiEntry kanji = (JLPTThreeKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+            kanjiLiteral = kanji.getKanjiLiteral();
+            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2)) ){  //JLPT level 2
+            JLPTTwoKanjiEntry kanji = (JLPTTwoKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+            kanjiLiteral = kanji.getKanjiLiteral();
+            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3)) ){  //JLPT level 1
+            JLPTOneKanjiEntry kanji = (JLPTOneKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+            kanjiLiteral = kanji.getKanjiLiteral();
+            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
+        }  else {  //Miscellaneous kanji
+            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+            kanjiLiteral = kanji.getKanjiLiteral();
+            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
+            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
+        }
+
+        /*
+        else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(4)) ){  //Miscellaneous kanji #1
+            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(5)) ){  //Miscellaneous kanji #1
+            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(6)) ){  //Miscellaneous kanji #1
+            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(7)) ){  //Miscellaneous kanji #1
+            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
+        }
+        */
 
         this.kanjiNumOrderText.setText(String.format("%d of %d", kanjiIndexToUse + 1, this.numOfKanji) );
-        this.kanjiDisplayText.setText(initialKanji.getKanjiLiteral());
-        this.onReadingText.setText("On: " + initialKanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", ")) );
-        this.kunReadingText.setText("Kun: " + initialKanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", ")));
-        this.englishMeaningText.setText("Meaning: " + initialKanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", ")));
-
-        String frequencyTextValue = initialKanji.getFrequencyRank().isEmpty() ? "N/A": initialKanji.getFrequencyRank();
-        this.frequencyRankText.setText("Frequency Rank: " + frequencyTextValue);
+        this.kanjiDisplayText.setText(kanjiLiteral);
+        this.onReadingText.setText("On: " + onreading );
+        this.kunReadingText.setText("Kun: " + kunReading);
+        this.englishMeaningText.setText("Meaning: " + englishMeaning);
+        this.frequencyRankText.setText("Frequency Rank: " + frequencyRank);
 
         this.memorizedCheckbox.setChecked(this.memorizedStates[kanjiIndexToUse]);
+    }
+
+    public void saveState(){
+        //To-Do: Save memorize kanji values before leaving fragment
     }
 }

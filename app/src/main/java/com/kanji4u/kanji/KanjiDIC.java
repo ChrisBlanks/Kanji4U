@@ -1,6 +1,11 @@
 package com.kanji4u.kanji;
 
+import com.kanji4u.database.JLPTFourKanjiEntry;
+import com.kanji4u.database.JLPTOneKanjiEntry;
+import com.kanji4u.database.JLPTThreeKanjiEntry;
+import com.kanji4u.database.JLPTTwoKanjiEntry;
 import com.kanji4u.database.KanjiEntry;
+import com.kanji4u.database.MiscellaneousKanjiEntry;
 
 import java.util.ArrayList;
 
@@ -13,12 +18,14 @@ public class KanjiDIC  implements Kanji{
     private ArrayList<String> kunReadings = new ArrayList<>();
     private ArrayList<String> englishMeanings = new ArrayList<>();
 
+    private boolean memorizedKanji;
 
-    public KanjiDIC(KanjiInfo kInfo, ArrayList<String> onReadings, ArrayList<String> kunReadings,ArrayList<String> englishMeanings) {
+    public KanjiDIC(KanjiInfo kInfo, ArrayList<String> onReadings, ArrayList<String> kunReadings,ArrayList<String> englishMeanings, boolean memorizedKanji) {
         this.kanjiInfo = kInfo;
         this.onReadings.addAll(onReadings);
         this.kunReadings.addAll(kunReadings);
         this.englishMeanings.addAll(englishMeanings);
+        this.memorizedKanji = memorizedKanji;
     }
 
     public String getKanjiLiteral() {
@@ -61,6 +68,14 @@ public class KanjiDIC  implements Kanji{
         return this.kunReadings;
     }
 
+    public boolean isMemorizedKanji() {
+        return memorizedKanji;
+    }
+
+    public void setMemorizedKanji(boolean memorizedKanji) {
+        this.memorizedKanji = memorizedKanji;
+    }
+
     @Override
     public String toString() {
         return "KanjiDIC{" +
@@ -86,4 +101,75 @@ public class KanjiDIC  implements Kanji{
         return new KanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
                 this.onReadings, this.kunReadings, this.englishMeanings);
     }
+
+    public JLPTOneKanjiEntry createJLPTOneKanjiEntry(){
+        String kanjiLiteral = kanjiInfo.getKanjiLiteral();
+        String JISCode = kanjiInfo.getJISCode();
+        String unicode = kanjiInfo.getUnicode();
+        String grade = kanjiInfo.getGrade();
+        String strokeNum = kanjiInfo.getStrokeNum();
+        String frequencyRank = kanjiInfo.getFrequencyRank();
+        String JLPTLevel = kanjiInfo.getJLPTLevel();
+        boolean memorizeState = isMemorizedKanji();
+
+        return new JLPTOneKanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
+                this.onReadings, this.kunReadings, this.englishMeanings,memorizeState);
+    }
+
+    public JLPTTwoKanjiEntry createJLPTTwoKanjiEntry(){
+        String kanjiLiteral = kanjiInfo.getKanjiLiteral();
+        String JISCode = kanjiInfo.getJISCode();
+        String unicode = kanjiInfo.getUnicode();
+        String grade = kanjiInfo.getGrade();
+        String strokeNum = kanjiInfo.getStrokeNum();
+        String frequencyRank = kanjiInfo.getFrequencyRank();
+        String JLPTLevel = kanjiInfo.getJLPTLevel();
+        boolean memorizeState = isMemorizedKanji();
+
+        return new JLPTTwoKanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
+                this.onReadings, this.kunReadings, this.englishMeanings,memorizeState);
+    }
+
+    public JLPTThreeKanjiEntry createJLPTThreeKanjiEntry(){
+        String kanjiLiteral = kanjiInfo.getKanjiLiteral();
+        String JISCode = kanjiInfo.getJISCode();
+        String unicode = kanjiInfo.getUnicode();
+        String grade = kanjiInfo.getGrade();
+        String strokeNum = kanjiInfo.getStrokeNum();
+        String frequencyRank = kanjiInfo.getFrequencyRank();
+        String JLPTLevel = kanjiInfo.getJLPTLevel();
+        boolean memorizeState = isMemorizedKanji();
+
+        return new JLPTThreeKanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
+                this.onReadings, this.kunReadings, this.englishMeanings,memorizeState);
+    }
+
+    public JLPTFourKanjiEntry createJLPTFourKanjiEntry(){
+        String kanjiLiteral = kanjiInfo.getKanjiLiteral();
+        String JISCode = kanjiInfo.getJISCode();
+        String unicode = kanjiInfo.getUnicode();
+        String grade = kanjiInfo.getGrade();
+        String strokeNum = kanjiInfo.getStrokeNum();
+        String frequencyRank = kanjiInfo.getFrequencyRank();
+        String JLPTLevel = kanjiInfo.getJLPTLevel();
+        boolean memorizeState = isMemorizedKanji();
+
+        return new JLPTFourKanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
+                this.onReadings, this.kunReadings, this.englishMeanings, memorizeState);
+    }
+
+    public MiscellaneousKanjiEntry createMisceallaneousKanjiEntry(){
+        String kanjiLiteral = kanjiInfo.getKanjiLiteral();
+        String JISCode = kanjiInfo.getJISCode();
+        String unicode = kanjiInfo.getUnicode();
+        String grade = kanjiInfo.getGrade();
+        String strokeNum = kanjiInfo.getStrokeNum();
+        String frequencyRank = kanjiInfo.getFrequencyRank();
+        String JLPTLevel = kanjiInfo.getJLPTLevel();
+        boolean memorizeState = isMemorizedKanji();
+
+        return new MiscellaneousKanjiEntry(kanjiLiteral, JISCode, unicode, grade, strokeNum, frequencyRank, JLPTLevel,
+                this.onReadings, this.kunReadings, this.englishMeanings,memorizeState);
+    }
+
 }

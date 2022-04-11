@@ -21,8 +21,13 @@ import android.widget.Toolbar;
 
 import com.kanji4u.app.databinding.FragmentLessonsBinding;
 import com.kanji4u.database.DatabaseViewModal;
+import com.kanji4u.database.JLPTFourKanjiEntry;
+import com.kanji4u.database.JLPTOneKanjiEntry;
+import com.kanji4u.database.JLPTThreeKanjiEntry;
+import com.kanji4u.database.JLPTTwoKanjiEntry;
 import com.kanji4u.database.Kanji4UDatabase;
 import com.kanji4u.database.KanjiEntry;
+import com.kanji4u.database.MiscellaneousKanjiEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,79 +73,133 @@ public class LessonsFragment extends Fragment {
         lessonsRows = new ArrayList<>();
 
         dbViewModal = new ViewModelProvider(this).get(DatabaseViewModal.class);
-        dbViewModal.getAllKanji().observe(getViewLifecycleOwner(), new Observer<List<KanjiEntry>>() {
-            @SuppressLint("NewApi")
+
+        if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
+
+            dbViewModal.getAllJLPTFourKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTFourKanjiEntry>>() {
+                @Override
+                public void onChanged(List<JLPTFourKanjiEntry> jlptFourKanjiEntries) {
+                    processKanji(view, jlptFourKanjiEntries);
+                }
+
+            });
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1))){
+            dbViewModal.getAllJLPTThreeKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTThreeKanjiEntry>>() {
+                @Override
+                public void onChanged(List<JLPTThreeKanjiEntry> jlptThreeKanjiEntries) {
+                    processKanji(view, jlptThreeKanjiEntries);
+                }
+
+            });
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2))){
+            dbViewModal.getAllJLPTTwoKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTTwoKanjiEntry>>() {
+                @Override
+                public void onChanged(List<JLPTTwoKanjiEntry> jlptTwoKanjiEntries) {
+                    processKanji(view, jlptTwoKanjiEntries);
+                }
+
+            });
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3))){
+            dbViewModal.getAllJLPTOneKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTOneKanjiEntry>>() {
+                @Override
+                public void onChanged(List<JLPTOneKanjiEntry> jlptOneKanjiEntries) {
+                    processKanji(view, jlptOneKanjiEntries);
+                }
+
+            });
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(4))){
+            dbViewModal.getAllMiscellaneousKanji().observe(getViewLifecycleOwner(), new Observer<List<MiscellaneousKanjiEntry>>() {
+                @Override
+                public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
+                    ArrayList<MiscellaneousKanjiEntry> selectedKanji = new ArrayList<>(miscellaneousKanjiEntries.subList(0,100));
+                    processKanji(view, selectedKanji);
+                }
+
+            });
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(5))){
+            dbViewModal.getAllMiscellaneousKanji().observe(getViewLifecycleOwner(), new Observer<List<MiscellaneousKanjiEntry>>() {
+                @Override
+                public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
+                    ArrayList<MiscellaneousKanjiEntry> selectedKanji = new ArrayList<>(miscellaneousKanjiEntries.subList(100,200));
+                    processKanji(view, selectedKanji);
+                }
+
+            });
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(6))){
+            dbViewModal.getAllMiscellaneousKanji().observe(getViewLifecycleOwner(), new Observer<List<MiscellaneousKanjiEntry>>() {
+                @Override
+                public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
+                    ArrayList<MiscellaneousKanjiEntry> selectedKanji = new ArrayList<>(miscellaneousKanjiEntries.subList(200,300));
+                    processKanji(view, selectedKanji);
+                }
+
+            });
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(7))){
+            dbViewModal.getAllMiscellaneousKanji().observe(getViewLifecycleOwner(), new Observer<List<MiscellaneousKanjiEntry>>() {
+                @Override
+                public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
+                    ArrayList<MiscellaneousKanjiEntry> selectedKanji = new ArrayList<>(miscellaneousKanjiEntries.subList(300,miscellaneousKanjiEntries.size() ));
+                    processKanji(view, selectedKanji);
+                }
+
+            });
+        }else { //default to JLPT 4 if nothing else matches
+            dbViewModal.getAllJLPTFourKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTFourKanjiEntry>>() {
+                @Override
+                public void onChanged(List<JLPTFourKanjiEntry> jlptFourKanjiEntries) {
+                    processKanji(view, jlptFourKanjiEntries);
+                }
+
+            });
+        }
+
+        //setup initial view until database returns result
+        lessonsViewAdapter =new LessonsViewAdapter(view.getContext(),lessonsRows); //To-Do: pass context & rows List
+        lessonsRecycleView.setAdapter(lessonsViewAdapter);
+    }
+
+
+    public void processKanji(View view, List<?> selectedKanji){
+
+        //calculate number of rows based
+        int numOfKanji = selectedKanji.size();
+        int numOfLessons = (int) (numOfKanji / LessonsFragment.NUM_OF_KANJI_PER_LESSON);
+        numOfLessons += (numOfKanji % LessonsFragment.NUM_OF_KANJI_PER_LESSON) > 0 ? 1 : 0;
+        for (int i = 1; i <= numOfLessons; i++) {
+            lessonsRows.add(new RowFeedItem(String.format("Lesson %d", i), i - 1));
+        }
+        Log.i("Number of rows: ", String.format("%d", numOfLessons));
+
+        lessonsViewAdapter = new LessonsViewAdapter(view.getContext(), lessonsRows); //To-Do: pass context & rows List
+        lessonsViewAdapter.setRowItemListener(new OnRowItemClickListener() { //navigate to next fragment
             @Override
-            public void onChanged(List<KanjiEntry> kanjiEntries) {
-                ArrayList<KanjiEntry> selectedKanji;
+            public void onRowItemClick(RowFeedItem row) {
+                Log.i("Lesson Nav Selection", "Selected: " + row.getRowTitle());
 
-                if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
-                    selectedKanji = (ArrayList<KanjiEntry>) kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.equals("4")).collect(Collectors.toList());
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1)) ){  //JLPT level 3
-                    selectedKanji = (ArrayList<KanjiEntry>) kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.equals("3")).collect(Collectors.toList());
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2)) ){  //JLPT level 2
-                    selectedKanji = (ArrayList<KanjiEntry>) kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.equals("2")).collect(Collectors.toList());
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3)) ){  //JLPT level 1
-                    selectedKanji = (ArrayList<KanjiEntry>) kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.equals("1")).collect(Collectors.toList());
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(4)) ){  //Miscellaneous kanji #1
-                    List<KanjiEntry> temp = kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.isEmpty()).collect(Collectors.toList());
-                    selectedKanji = new ArrayList<>(temp.subList(0,100)) ;
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(5)) ){  //Miscellaneous kanji #1
-                    List<KanjiEntry> temp = kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.isEmpty()).collect(Collectors.toList());
-                    selectedKanji = new ArrayList<>(temp.subList(100,200)) ;
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(6)) ){  //Miscellaneous kanji #1
-                    List<KanjiEntry> temp = kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.isEmpty()).collect(Collectors.toList());
-                    selectedKanji = new ArrayList<>(temp.subList(200,300)) ;
-                } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(7)) ){  //Miscellaneous kanji #1
-                    List<KanjiEntry> temp = kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.isEmpty()).collect(Collectors.toList());
-                    selectedKanji = new ArrayList<>(temp.subList(300,temp.size())) ;
-                } else { //if nothing matches, use JLPT level 4
-                    selectedKanji = (ArrayList<KanjiEntry>) kanjiEntries.stream().filter(kanji -> kanji.JLPTLevel.equals("4")).collect(Collectors.toList());
-                }
+                //create kanji subset for specific lesson
+                int lessonNumber = row.getIndex();
+                int lowerBound = lessonNumber * 10;
+                int upperBound = lowerBound + 10;
+                int listSize = selectedKanji.size();
+                upperBound = (upperBound > listSize) ? listSize : upperBound;
 
-                //calculate number of rows based
-                int numOfKanji= selectedKanji.size();
-                int numOfLessons = (int)(numOfKanji / LessonsFragment.NUM_OF_KANJI_PER_LESSON);
-                numOfLessons += (numOfKanji % LessonsFragment.NUM_OF_KANJI_PER_LESSON) > 0 ? 1 : 0;
-                for(int i = 1; i <=numOfLessons; i++){
-                    lessonsRows.add( new RowFeedItem(String.format("Lesson %d", i), i - 1) );
-                }
-                Log.i("Number of rows: ",String.format("%d",numOfLessons));
+                ArrayList<?> subsetKanji = new ArrayList<>(selectedKanji.subList(lowerBound, upperBound));
 
-                lessonsViewAdapter = new LessonsViewAdapter(view.getContext(),lessonsRows); //To-Do: pass context & rows List
-                lessonsViewAdapter.setRowItemListener(new OnRowItemClickListener() { //navigate to next fragment
-                    @Override
-                    public void onRowItemClick(RowFeedItem row) {
-                        Log.i("Lesson Nav Selection", "Selected: " + row.getRowTitle());
+                Bundle selection = new Bundle();
+                selection.putString("row_selection", row.getRowTitle());
+                selection.putParcelableArrayList("kanji", (ArrayList<? extends Parcelable>) subsetKanji);
+                selection.putString("jlpt", jlptLevel);
 
-                        //create kanji subset for specific lesson
-                        int lessonNumber = row.getIndex();
-                        int lowerBound = lessonNumber * 10;
-                        int upperBound = lowerBound + 10;
-                        int listSize = selectedKanji.size();
-                        upperBound = (upperBound > listSize) ? listSize : upperBound;
+                //go to kanji display screen
+                NavHostFragment.findNavController(LessonsFragment.this)
+                        .navigate(R.id.action_lessonsFragment_to_kanjiDisplayFragment, selection);
 
-                        ArrayList<KanjiEntry> subsetKanji= new ArrayList<>(selectedKanji.subList(lowerBound,upperBound)) ;
-
-                        Bundle selection = new Bundle();
-                        selection.putString("row_selection", row.getRowTitle());
-                        selection.putParcelableArrayList("kanji", (ArrayList<? extends Parcelable>) subsetKanji);
-                        selection.putString("jlpt",jlptLevel);
-
-                        //go to kanji display screen
-                        NavHostFragment.findNavController(LessonsFragment.this)
-                                .navigate(R.id.action_lessonsFragment_to_kanjiDisplayFragment,selection);
-
-                    }
-                });
-
-                lessonsRecycleView.setAdapter(lessonsViewAdapter);
             }
         });
 
-        //setup initial view until database returns result
-        lessonsViewAdapter = new LessonsViewAdapter(view.getContext(),lessonsRows); //To-Do: pass context & rows List
         lessonsRecycleView.setAdapter(lessonsViewAdapter);
+
     }
+
 
 }
