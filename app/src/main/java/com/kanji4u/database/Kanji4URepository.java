@@ -45,59 +45,67 @@ public class Kanji4URepository {
 
     }
 
-    //kanji dao functions
-    public void insert(KanjiEntry kanji){
-        new InsertKanjiEntryAsyncTask(kanjiDao).execute(kanji);
+    public void insert(DBKanji kanji, KanjiEntryType entryType){
+        switch (entryType){
+            case JLPT1KANJI:
+            default:
+                new InsertJLPTOneKanjiEntryAsyncTask(this.jlptOneKanjiDao).execute((JLPTOneKanjiEntry)kanji);
+                break;
+            case JLPT2KANJI:
+                new InsertJLPTTwoKanjiEntryAsyncTask(this.jlptTwoKanjiDao).execute((JLPTTwoKanjiEntry) kanji);
+                break;
+            case JLPT3KANJI:
+                new InsertJLPTThreeKanjiEntryAsyncTask(this.jlptThreeKanjiDao).execute((JLPTThreeKanjiEntry) kanji);
+                break;
+            case JLPT4KANJI:
+                new InsertJLPTFourKanjiEntryAsyncTask(this.jlptFourKanjiDao).execute((JLPTFourKanjiEntry) kanji);
+                break;
+            case MISCELLANEOUSKANJI:
+                new InsertMiscellaneousKanjiEntryAsyncTask(this.miscellaneousKanjiDao).execute((MiscellaneousKanjiEntry) kanji);
+                break;
+        }
     }
 
-    public void update(KanjiEntry kanji){
-        new UpdateKanjiEntryAsyncTask(kanjiDao).execute(kanji);
+    public void update(DBKanji kanji, KanjiEntryType entryType){
+        switch (entryType){
+            case JLPT1KANJI:
+            default:
+                new UpdateJLPTOneKanjiEntryAsyncTask(this.jlptOneKanjiDao).execute((JLPTOneKanjiEntry)kanji);
+                break;
+            case JLPT2KANJI:
+                new UpdateJLPTTwoKanjiEntryAsyncTask(this.jlptTwoKanjiDao).execute((JLPTTwoKanjiEntry)kanji);
+                break;
+            case JLPT3KANJI:
+                new UpdateJLPTThreeKanjiEntryAsyncTask(this.jlptThreeKanjiDao).execute((JLPTThreeKanjiEntry)kanji);
+                break;
+            case JLPT4KANJI:
+                new UpdateJLPTFourKanjiEntryAsyncTask(this.jlptFourKanjiDao).execute((JLPTFourKanjiEntry)kanji);
+                break;
+            case MISCELLANEOUSKANJI:
+                new UpdateMiscellaneousKanjiEntryAsyncTask(this.miscellaneousKanjiDao).execute((MiscellaneousKanjiEntry)kanji);
+                break;
+        }
     }
 
-    public void delete(KanjiEntry kanji){ new DeleteKanjiEntryAsyncTask(kanjiDao).execute(kanji); }
-
-    public LiveData<List<KanjiEntry>> getAllKanji(){
-        return this.kanjiList;
-    }
-
-    //jlpt versions
-    public void insert(JLPTOneKanjiEntry kanji){
-        new InsertJLPTOneKanjiEntryAsyncTask(this.jlptOneKanjiDao).execute(kanji);
-    }
-    public void insert(JLPTTwoKanjiEntry kanji){
-        new InsertJLPTTwoKanjiEntryAsyncTask(this.jlptTwoKanjiDao).execute(kanji);
-    }
-
-    public void insert(JLPTThreeKanjiEntry kanji){
-        new InsertJLPTThreeKanjiEntryAsyncTask(this.jlptThreeKanjiDao).execute(kanji);
-    }
-
-    public void insert(JLPTFourKanjiEntry kanji){
-        new InsertJLPTFourKanjiEntryAsyncTask(this.jlptFourKanjiDao).execute(kanji);
-    }
-
-    public void insert(MiscellaneousKanjiEntry kanji){
-        new InsertMiscellaneousKanjiEntryAsyncTask(this.miscellaneousKanjiDao).execute(kanji);
-    }
-
-    public void update(JLPTOneKanjiEntry kanji){
-        new UpdateJLPTOneKanjiEntryAsyncTask(this.jlptOneKanjiDao).execute(kanji);
-    }
-
-    public void update(JLPTTwoKanjiEntry kanji){
-        new UpdateJLPTTwoKanjiEntryAsyncTask(this.jlptTwoKanjiDao).execute(kanji);
-    }
-
-    public void update(JLPTThreeKanjiEntry kanji){
-        new UpdateJLPTThreeKanjiEntryAsyncTask(this.jlptThreeKanjiDao).execute(kanji);
-    }
-
-    public void update(JLPTFourKanjiEntry kanji){
-        new UpdateJLPTFourKanjiEntryAsyncTask(this.jlptFourKanjiDao).execute(kanji);
-    }
-
-    public void update(MiscellaneousKanjiEntry kanji){
-        new UpdateMiscellaneousKanjiEntryAsyncTask(this.miscellaneousKanjiDao).execute(kanji);
+    public void delete(DBKanji kanji, KanjiEntryType entryType){
+        switch (entryType){
+            case JLPT1KANJI:
+            default:
+                new DeleteJLPTOneKanjiEntryAsyncTask(this.jlptOneKanjiDao).execute((JLPTOneKanjiEntry)kanji);
+                break;
+            case JLPT2KANJI:
+                new DeleteJLPTTwoKanjiEntryAsyncTask(this.jlptTwoKanjiDao).execute((JLPTTwoKanjiEntry)kanji);
+                break;
+            case JLPT3KANJI:
+                new DeleteJLPTThreeKanjiEntryAsyncTask(this.jlptThreeKanjiDao).execute((JLPTThreeKanjiEntry)kanji);
+                break;
+            case JLPT4KANJI:
+                new DeleteJLPTFourKanjiEntryAsyncTask(this.jlptFourKanjiDao).execute((JLPTFourKanjiEntry)kanji);
+                break;
+            case MISCELLANEOUSKANJI:
+                new DeleteMiscellaneousKanjiEntryAsyncTask(this.miscellaneousKanjiDao).execute((MiscellaneousKanjiEntry)kanji);
+                break;
+        }
     }
 
     ////To-Do: Implement delete functions for all jlpt kanji entries
