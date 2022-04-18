@@ -23,8 +23,6 @@ public class DatabaseViewModal extends AndroidViewModel {
 
         this.repo = new Kanji4URepository(app);
 
-        this.kanjiList = this.repo.getAllKanji();
-
         this.jlptOneKanjiList = this.repo.getAllJLPTOneKanji();
         this.jlptTwoKanjiList = this.repo.getAllJLPTTwoKanji();
         this.jlptThreeKanjiList = this.repo.getAllJLPTThreeKanji();
@@ -34,53 +32,32 @@ public class DatabaseViewModal extends AndroidViewModel {
     }
 
     //kanji dao methods
-    public void insert(KanjiEntry kanji){
-        this.repo.insert(kanji);
+    public void insert(DBKanji kanji, KanjiEntryType entryType){
+        this.repo.insert(kanji,entryType);
     }
-    public void update(KanjiEntry kanji){ this.repo.update(kanji); }
-    public void delete(KanjiEntry kanji){
-        this.repo.delete(kanji);
+    public void update(DBKanji kanji, KanjiEntryType entryType){
+        this.repo.update(kanji,entryType);
     }
-    public LiveData<List<KanjiEntry>> getAllKanji(){
-        return this.kanjiList;
+    public void delete(DBKanji kanji, KanjiEntryType entryType){
+        this.repo.delete(kanji,entryType);
     }
 
-    //1
-    public void insertJLPTOneKanji(JLPTOneKanjiEntry kanji){
-        this.repo.insert(kanji);
-    }
-    public void updateJLPTOneKanji(JLPTOneKanjiEntry kanji){ this.repo.update(kanji); }
     public LiveData<List<JLPTOneKanjiEntry>> getAllJLPTOneKanji(){
         return this.jlptOneKanjiList;
     }
-
-    //2
-    public void insertJLPTTwoKanji(JLPTTwoKanjiEntry kanji){
-        this.repo.insert(kanji);
-    }
-    public void updateJLPTTwoKanji(JLPTTwoKanjiEntry kanji){ this.repo.update(kanji); }
     public LiveData<List<JLPTTwoKanjiEntry>> getAllJLPTTwoKanji(){
         return this.jlptTwoKanjiList;
     }
 
-    //3
-    public void insertJLPTThreeKanji(JLPTThreeKanjiEntry kanji){
-        this.repo.insert(kanji);
+    public LiveData<List<JLPTThreeKanjiEntry>> getAllJLPTThreeKanji(){
+        return this.jlptThreeKanjiList;
     }
-    public void updateJLPTThreeKanji(JLPTThreeKanjiEntry kanji){ this.repo.update(kanji); }
-    public LiveData<List<JLPTThreeKanjiEntry>> getAllJLPTThreeKanji(){ return this.jlptThreeKanjiList; }
 
-    //4
-    public void insertJLPTFourKanji(JLPTFourKanjiEntry kanji){
-        this.repo.insert(kanji);
+    public LiveData<List<JLPTFourKanjiEntry>> getAllJLPTFourKanji(){
+        return this.jlptFourKanjiList;
     }
-    public void updateJLPTFourKanji(JLPTFourKanjiEntry kanji){ this.repo.update(kanji); }
-    public LiveData<List<JLPTFourKanjiEntry>> getAllJLPTFourKanji(){ return this.jlptFourKanjiList; }
 
-    //miscellaneous
-    public void insertMiscellaneousKanji(MiscellaneousKanjiEntry kanji){
-        this.repo.insert(kanji);
+    public LiveData<List<MiscellaneousKanjiEntry>> getAllMiscellaneousKanji(){
+        return this.miscellaneousKanjiList;
     }
-    public void updateMiscellaneousKanji(MiscellaneousKanjiEntry kanji){ this.repo.update(kanji); }
-    public LiveData<List<MiscellaneousKanjiEntry>> getAllMiscellaneousKanji(){ return this.miscellaneousKanjiList; }
 }

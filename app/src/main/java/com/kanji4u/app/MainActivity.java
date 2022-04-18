@@ -26,6 +26,7 @@ import com.kanji4u.database.JLPTTwoKanjiEntry;
 import com.kanji4u.database.Kanji4UDatabase;
 import com.kanji4u.database.KanjiDao;
 import com.kanji4u.database.KanjiEntry;
+import com.kanji4u.database.KanjiEntryType;
 import com.kanji4u.database.MiscellaneousKanjiEntry;
 import com.kanji4u.kanji.KanjiCollection;
 import com.kanji4u.kanji.KanjiDIC;
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
                         if(kanji.getKanjiJLPTLevel().equals("1")) {
-                            dbViewModal.insertJLPTOneKanji(kanji.createJLPTOneKanjiEntry());
+                            //dbViewModal.insertJLPTOneKanji(kanji.createJLPTOneKanjiEntry());
+                            dbViewModal.insert(kanji.createJLPTOneKanjiEntry(), KanjiEntryType.JLPT1KANJI);
                         }
                     }
                     Log.i("Database","JLPT 1 Kanji has finished loading into database.");
@@ -114,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
                         if(kanji.getKanjiJLPTLevel().equals("2")) {
-                            dbViewModal.insertJLPTTwoKanji(kanji.createJLPTTwoKanjiEntry());
+                            //dbViewModal.insertJLPTTwoKanji(kanji.createJLPTTwoKanjiEntry());
+                            dbViewModal.insert(kanji.createJLPTTwoKanjiEntry(), KanjiEntryType.JLPT2KANJI);
                         }
                     }
                     Log.i("Database","JLPT 2 Kanji has finished loading into database.");
@@ -134,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
                         if(kanji.getKanjiJLPTLevel().equals("3")) {
-                            dbViewModal.insertJLPTThreeKanji(kanji.createJLPTThreeKanjiEntry());
+                            //dbViewModal.insertJLPTThreeKanji(kanji.createJLPTThreeKanjiEntry());
+                            dbViewModal.insert(kanji.createJLPTThreeKanjiEntry(), KanjiEntryType.JLPT3KANJI);
                         }
                     }
                     Log.i("Database","JLPT 3 Kanji has finished loading into database.");
@@ -154,7 +158,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
                         if(kanji.getKanjiJLPTLevel().equals("4")) {
-                            dbViewModal.insertJLPTFourKanji(kanji.createJLPTFourKanjiEntry());
+                            //dbViewModal.insertJLPTFourKanji(kanji.createJLPTFourKanjiEntry());
+                            dbViewModal.insert(kanji.createJLPTFourKanjiEntry(), KanjiEntryType.JLPT4KANJI);
                         }
                     }
                     Log.i("Database","JLPT 4 Kanji has finished loading into database.");
@@ -174,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for(KanjiDIC kanji : kanjiDict.getLoadedKanji()){
                         if(kanji.getKanjiJLPTLevel().isEmpty()) {
-                            dbViewModal.insertMiscellaneousKanji(kanji.createMisceallaneousKanjiEntry());
+                            //dbViewModal.insertMiscellaneousKanji(kanji.createMisceallaneousKanjiEntry());
+                            dbViewModal.insert(kanji.createMisceallaneousKanjiEntry(), KanjiEntryType.MISCELLANEOUSKANJI);
                         }
                     }
                     Log.i("Database","Miscellaneous Kanji has finished loading into database.");

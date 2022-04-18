@@ -28,6 +28,7 @@ import com.kanji4u.database.JLPTThreeKanjiEntry;
 import com.kanji4u.database.JLPTTwoKanjiDao;
 import com.kanji4u.database.JLPTTwoKanjiEntry;
 import com.kanji4u.database.KanjiEntry;
+import com.kanji4u.database.KanjiEntryType;
 import com.kanji4u.database.MiscellaneousKanjiEntry;
 
 import java.util.ArrayList;
@@ -179,29 +180,34 @@ public class KanjiDisplayFragment extends Fragment {
         //update proper table with memorized state data
         if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
             for( int indx = 0; indx < this.kanjiList.size(); indx++){
-                JLPTFourKanjiEntry kanji = (JLPTFourKanjiEntry) this.kanjiList.get(indx);
-                dbViewModal.updateJLPTFourKanji(kanji);
+                //JLPTFourKanjiEntry kanji = (JLPTFourKanjiEntry) this.kanjiList.get(indx);
+                //dbViewModal.updateJLPTFourKanji(kanji);
+                dbViewModal.update((DBKanji) this.kanjiList.get(indx), KanjiEntryType.JLPT4KANJI);
             }
 
         } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1))){
             for( int indx = 0; indx < this.kanjiList.size(); indx++){
-                JLPTThreeKanjiEntry kanji = (JLPTThreeKanjiEntry) this.kanjiList.get(indx);
-                dbViewModal.updateJLPTThreeKanji(kanji);
+                //JLPTThreeKanjiEntry kanji = (JLPTThreeKanjiEntry) this.kanjiList.get(indx);
+                //dbViewModal.updateJLPTThreeKanji(kanji);
+                dbViewModal.update((DBKanji) this.kanjiList.get(indx), KanjiEntryType.JLPT3KANJI);
             }
         }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2))){
             for( int indx = 0; indx < this.kanjiList.size(); indx++){
-                JLPTTwoKanjiEntry kanji = (JLPTTwoKanjiEntry) this.kanjiList.get(indx);
-                dbViewModal.updateJLPTTwoKanji(kanji);
+                //JLPTTwoKanjiEntry kanji = (JLPTTwoKanjiEntry) this.kanjiList.get(indx);
+                //dbViewModal.updateJLPTTwoKanji(kanji);
+                dbViewModal.update((DBKanji) this.kanjiList.get(indx), KanjiEntryType.JLPT2KANJI);
             }
         }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3))){
             for( int indx = 0; indx < this.kanjiList.size(); indx++){
-                JLPTOneKanjiEntry kanji = (JLPTOneKanjiEntry) this.kanjiList.get(indx);
-                dbViewModal.updateJLPTOneKanji(kanji);
+                //JLPTOneKanjiEntry kanji = (JLPTOneKanjiEntry) this.kanjiList.get(indx);
+                //dbViewModal.updateJLPTOneKanji(kanji);
+                dbViewModal.update((DBKanji) this.kanjiList.get(indx), KanjiEntryType.JLPT1KANJI);
             }
         }else { //update miscellaneous table
             for( int indx = 0; indx < this.kanjiList.size(); indx++){
-                MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(indx);
-                dbViewModal.updateMiscellaneousKanji(kanji);
+                //MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(indx);
+                //dbViewModal.updateMiscellaneousKanji(kanji);
+                dbViewModal.update((DBKanji) this.kanjiList.get(indx), KanjiEntryType.MISCELLANEOUSKANJI);
             }
         }
 
