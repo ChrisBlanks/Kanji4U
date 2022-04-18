@@ -14,6 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="34sp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

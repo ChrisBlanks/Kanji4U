@@ -108,9 +108,6 @@ public class Kanji4URepository {
         }
     }
 
-    ////To-Do: Implement delete functions for all jlpt kanji entries
-    //public void delete(KanjiEntry kanji){ new DeleteKanjiEntryAsyncTask(kanjiDao).execute(kanji); }
-
     public LiveData<List<JLPTOneKanjiEntry>> getAllJLPTOneKanji(){
         return this.jlptOneKanjiList;
     }
