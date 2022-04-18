@@ -6,6 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.kanji4u.app.databinding.FragmentKanjiDisplayBinding;
+import com.kanji4u.database.DBKanji;
+import com.kanji4u.database.DatabaseViewModal;
 import com.kanji4u.database.JLPTFourKanjiEntry;
 import com.kanji4u.database.JLPTOneKanjiEntry;
 import com.kanji4u.database.JLPTThreeKanjiEntry;
@@ -26,6 +31,7 @@ import com.kanji4u.database.KanjiEntry;
 import com.kanji4u.database.MiscellaneousKanjiEntry;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -36,13 +42,14 @@ public class KanjiDisplayFragment extends Fragment {
 
     private int currentKanjiIndex = 0;
     private int numOfKanji = 0;
-    private boolean[] memorizedStates;
     private String rowSelection;
     private String jlptLevel;
 
     private FragmentKanjiDisplayBinding binding;
+    private DatabaseViewModal dbViewModal;
 
     private ArrayList<?> kanjiList;
+    private boolean[] initialMemorizedState;
 
     TextView kanjiNumOrderText;
     TextView kanjiDisplayText;
@@ -68,7 +75,6 @@ public class KanjiDisplayFragment extends Fragment {
 
         this.kanjiList = bundle.getParcelableArrayList("kanji");
         this.numOfKanji = this.kanjiList.size();
-        this.memorizedStates = new boolean[this.numOfKanji];
 
         binding = FragmentKanjiDisplayBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -124,9 +130,8 @@ public class KanjiDisplayFragment extends Fragment {
 
     public void onCheckboxClicked(View view){
         //set state of current kanji based on change in checkbox state
-        this.memorizedStates[this.currentKanjiIndex] = ((CheckBox)view).isChecked();
-
-        //To-Do: Need to save this state between fragments (e.g. going back and forth) and long term (storage or db w/ other metadata)
+        boolean checkboxState = ((CheckBox)view).isChecked();
+        ((DBKanji)this.kanjiList.get(this.currentKanjiIndex)).setMemorizedKanji(checkboxState);
     }
 
     @SuppressLint("NewApi")
@@ -137,55 +142,15 @@ public class KanjiDisplayFragment extends Fragment {
         String kunReading = "";
         String englishMeaning= "";
         String frequencyRank= "";
+        boolean memorizedKanji= false;
 
-        if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
-            JLPTFourKanjiEntry kanji = (JLPTFourKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-            kanjiLiteral = kanji.getKanjiLiteral();
-            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
-        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1)) ){  //JLPT level 3
-            JLPTThreeKanjiEntry kanji = (JLPTThreeKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-            kanjiLiteral = kanji.getKanjiLiteral();
-            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
-        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2)) ){  //JLPT level 2
-            JLPTTwoKanjiEntry kanji = (JLPTTwoKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-            kanjiLiteral = kanji.getKanjiLiteral();
-            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
-        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3)) ){  //JLPT level 1
-            JLPTOneKanjiEntry kanji = (JLPTOneKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-            kanjiLiteral = kanji.getKanjiLiteral();
-            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
-        }  else {  //Miscellaneous kanji
-            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-            kanjiLiteral = kanji.getKanjiLiteral();
-            onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
-            frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
-        }
-
-        /*
-        else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(4)) ){  //Miscellaneous kanji #1
-            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(5)) ){  //Miscellaneous kanji #1
-            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(6)) ){  //Miscellaneous kanji #1
-            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(7)) ){  //Miscellaneous kanji #1
-            MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(kanjiIndexToUse);
-        }
-        */
+        DBKanji kanji = ((DBKanji)this.kanjiList.get(kanjiIndexToUse));
+        kanjiLiteral = kanji.getKanjiLiteral();
+        onreading= kanji.getOnReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+        kunReading = kanji.getKunReadings().stream().map(Object::toString).collect(Collectors.joining(", "));
+        englishMeaning= kanji.getEnglishMeanings().stream().map(Object::toString).collect(Collectors.joining(", "));
+        frequencyRank= kanji.getFrequencyRank().isEmpty() ? "N/A": kanji.getFrequencyRank();
+        memorizedKanji = kanji.isMemorizedKanji();
 
         this.kanjiNumOrderText.setText(String.format("%d of %d", kanjiIndexToUse + 1, this.numOfKanji) );
         this.kanjiDisplayText.setText(kanjiLiteral);
@@ -194,10 +159,52 @@ public class KanjiDisplayFragment extends Fragment {
         this.englishMeaningText.setText("Meaning: " + englishMeaning);
         this.frequencyRankText.setText("Frequency Rank: " + frequencyRank);
 
-        this.memorizedCheckbox.setChecked(this.memorizedStates[kanjiIndexToUse]);
+        this.memorizedCheckbox.setChecked(memorizedKanji);
     }
 
-    public void saveState(){
-        //To-Do: Save memorize kanji values before leaving fragment
+    /**
+     * Perform any actions after fragment is stopped
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        saveMemorizedState();
+    }
+
+    public void saveMemorizedState(){
+        dbViewModal = new ViewModelProvider(this).get(DatabaseViewModal.class);
+
+        Log.i("Save Display Fragment State","Saving memorized boolean state");
+
+        //update proper table with memorized state data
+        if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
+            for( int indx = 0; indx < this.kanjiList.size(); indx++){
+                JLPTFourKanjiEntry kanji = (JLPTFourKanjiEntry) this.kanjiList.get(indx);
+                dbViewModal.updateJLPTFourKanji(kanji);
+            }
+
+        } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1))){
+            for( int indx = 0; indx < this.kanjiList.size(); indx++){
+                JLPTThreeKanjiEntry kanji = (JLPTThreeKanjiEntry) this.kanjiList.get(indx);
+                dbViewModal.updateJLPTThreeKanji(kanji);
+            }
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2))){
+            for( int indx = 0; indx < this.kanjiList.size(); indx++){
+                JLPTTwoKanjiEntry kanji = (JLPTTwoKanjiEntry) this.kanjiList.get(indx);
+                dbViewModal.updateJLPTTwoKanji(kanji);
+            }
+        }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3))){
+            for( int indx = 0; indx < this.kanjiList.size(); indx++){
+                JLPTOneKanjiEntry kanji = (JLPTOneKanjiEntry) this.kanjiList.get(indx);
+                dbViewModal.updateJLPTOneKanji(kanji);
+            }
+        }else { //update miscellaneous table
+            for( int indx = 0; indx < this.kanjiList.size(); indx++){
+                MiscellaneousKanjiEntry kanji = (MiscellaneousKanjiEntry) this.kanjiList.get(indx);
+                dbViewModal.updateMiscellaneousKanji(kanji);
+            }
+        }
+
+        Log.i("Save Display Fragment State",this.jlptLevel);
     }
 }

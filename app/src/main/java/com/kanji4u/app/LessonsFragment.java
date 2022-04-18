@@ -154,7 +154,7 @@ public class LessonsFragment extends Fragment {
         }
 
         //setup initial view until database returns result
-        lessonsViewAdapter =new LessonsViewAdapter(view.getContext(),lessonsRows); //To-Do: pass context & rows List
+        lessonsViewAdapter =new LessonsViewAdapter(view.getContext(),lessonsRows);
         lessonsRecycleView.setAdapter(lessonsViewAdapter);
     }
 
@@ -165,8 +165,11 @@ public class LessonsFragment extends Fragment {
         int numOfKanji = selectedKanji.size();
         int numOfLessons = (int) (numOfKanji / LessonsFragment.NUM_OF_KANJI_PER_LESSON);
         numOfLessons += (numOfKanji % LessonsFragment.NUM_OF_KANJI_PER_LESSON) > 0 ? 1 : 0;
-        for (int i = 1; i <= numOfLessons; i++) {
-            lessonsRows.add(new RowFeedItem(String.format("Lesson %d", i), i - 1));
+
+        if(lessonsRows.isEmpty()) { //avoid creating duplicates if lessonRows has already been populated
+            for (int i = 1; i <= numOfLessons; i++) {
+                    lessonsRows.add(new RowFeedItem(String.format("Lesson %d", i), i - 1));
+            }
         }
         Log.i("Number of rows: ", String.format("%d", numOfLessons));
 

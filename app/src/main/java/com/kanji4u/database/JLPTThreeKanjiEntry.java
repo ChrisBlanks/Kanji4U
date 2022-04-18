@@ -12,7 +12,7 @@ import java.util.ArrayList;
 //declare class as entity that will exist in the database
 //Default name of table is the class name
 @Entity(tableName = "jlpt_three_kanji_entry")
-public class JLPTThreeKanjiEntry implements Parcelable {
+public class JLPTThreeKanjiEntry implements Parcelable, DBKanji  {
 
     //must define a primary key for an entity; autogenerates IDs for instances
     @PrimaryKey(autoGenerate = true)

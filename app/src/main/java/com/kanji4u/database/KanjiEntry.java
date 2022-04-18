@@ -12,7 +12,7 @@ import java.util.ArrayList;
 //declare class as entity that will exist in the database
 //Default name of table is the class name
 @Entity(tableName = "kanji_entry")
-public class KanjiEntry implements Parcelable {
+public class KanjiEntry implements Parcelable, DBKanji  {
 
     //must define a primary key for an entity; autogenerates IDs for instances
     @PrimaryKey(autoGenerate = true)
@@ -47,6 +47,17 @@ public class KanjiEntry implements Parcelable {
 
     @ColumnInfo(name = "english_meanings")
     public ArrayList<String> englishMeanings = new ArrayList<>();
+
+    @ColumnInfo(name = "memorized_kanji")
+    public boolean memorizedKanji; //value set from user interacting with app
+
+    public boolean isMemorizedKanji() {
+        return memorizedKanji;
+    }
+
+    public void setMemorizedKanji(boolean memorizedKanji) {
+        this.memorizedKanji = memorizedKanji;
+    }
 
     public String getKanjiLiteral() {
         return kanjiLiteral;

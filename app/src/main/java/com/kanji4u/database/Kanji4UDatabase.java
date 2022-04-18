@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 @Database(entities = {KanjiEntry.class, JLPTOneKanjiEntry.class,JLPTTwoKanjiEntry.class,
                         JLPTThreeKanjiEntry.class,JLPTFourKanjiEntry.class,MiscellaneousKanjiEntry.class},
-        version = 2)
+        version = 3)
 @TypeConverters({DatabaseConverters.class})
 public abstract class Kanji4UDatabase extends RoomDatabase {
 

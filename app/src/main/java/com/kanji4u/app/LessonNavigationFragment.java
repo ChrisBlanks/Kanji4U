@@ -57,11 +57,15 @@ public class LessonNavigationFragment extends Fragment {
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(1)) );
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(2)) );
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(3)) );
+
+        /* Temporarily omit miscellaneous rows due to long load times
+
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(4)) );
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(5)) );
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(6)) );
         lessonNavigationRows.add( new RowFeedItem(ROW_NAMES.get(7)) );
 
+         */
         lessonNavigationViewAdapter = new LessonNavigationViewAdapter(view.getContext(), lessonNavigationRows);
         lessonNavigationViewAdapter.setRowItemListener(new OnRowItemClickListener() {
             @Override
