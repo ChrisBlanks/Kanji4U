@@ -1,6 +1,7 @@
 package com.kanji4u.database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -40,6 +41,11 @@ public class DatabaseViewModal extends AndroidViewModel {
     }
     public void delete(DBKanji kanji, KanjiEntryType entryType){
         this.repo.delete(kanji,entryType);
+    }
+
+    public void deleteAllKanjiEntries(){
+        Log.i("Delete All Kanji", "Clearing all tables.");
+        this.repo.clearAllTables();
     }
 
     public LiveData<List<JLPTOneKanjiEntry>> getAllJLPTOneKanji(){

@@ -38,4 +38,6 @@ public interface JLPTThreeKanjiDao {
     @Update
     public void updateKanji(JLPTThreeKanjiEntry ... kanji);
 
+    @Query("DELETE FROM jlpt_three_kanji_entry")
+    public void deleteAllEntries();
 }

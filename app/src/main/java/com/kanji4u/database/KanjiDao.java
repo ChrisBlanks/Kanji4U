@@ -48,4 +48,7 @@ public interface KanjiDao {
     @Update
     public void updateKanji(KanjiEntry ... kanji);
 
+
+    @Query("DELETE FROM kanji_entry")
+    public void deleteAllEntries();
 }

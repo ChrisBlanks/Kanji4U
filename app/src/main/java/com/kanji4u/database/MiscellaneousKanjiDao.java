@@ -38,4 +38,6 @@ public interface MiscellaneousKanjiDao {
     @Update
     public void updateKanji(MiscellaneousKanjiEntry ... kanji);
 
+    @Query("DELETE FROM miscellaneous_kanji_entry")
+    public void deleteAllEntries();
 }

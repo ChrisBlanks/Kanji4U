@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Kanji4URepository {
 
+    Kanji4UDatabase db;
+
     private KanjiDao kanjiDao;
 
     private JLPTOneKanjiDao jlptOneKanjiDao;
@@ -27,7 +29,8 @@ public class Kanji4URepository {
     private LiveData< List<MiscellaneousKanjiEntry>>  miscellaneousKanjiList;
 
     public Kanji4URepository(Application app){
-        Kanji4UDatabase db = Kanji4UDatabase.getInstance(app);
+        db = Kanji4UDatabase.getInstance(app);
+
         kanjiDao = db.kanjiDao();
         kanjiList = kanjiDao.getAll();
 
@@ -43,6 +46,10 @@ public class Kanji4URepository {
         this.jlptFourKanjiList = this.jlptFourKanjiDao.getAll();
         this.miscellaneousKanjiList = this.miscellaneousKanjiDao.getAll();
 
+    }
+
+    public void clearAllTables(){
+        this.db.clearAllTables();
     }
 
     public void insert(DBKanji kanji, KanjiEntryType entryType){
@@ -108,15 +115,48 @@ public class Kanji4URepository {
         }
     }
 
+    private class AllKanjiDao {
+        public JLPTOneKanjiDao jlptOneKanjiDao;
+        public JLPTTwoKanjiDao jlptTwoKanjiDao;
+        public JLPTThreeKanjiDao jlptThreeKanjiDao;
+        public JLPTFourKanjiDao jlptFourKanjiDao;
+        public MiscellaneousKanjiDao miscellaneousKanjiDao;
+
+        public AllKanjiDao(JLPTOneKanjiDao jlptOneKanjiDao, JLPTTwoKanjiDao jlptTwoKanjiDao, JLPTThreeKanjiDao jlptThreeKanjiDao, JLPTFourKanjiDao jlptFourKanjiDao, MiscellaneousKanjiDao miscellaneousKanjiDao ){
+            this.jlptOneKanjiDao = jlptOneKanjiDao;
+            this.jlptTwoKanjiDao = jlptTwoKanjiDao;
+            this.jlptThreeKanjiDao = jlptThreeKanjiDao;
+            this.jlptFourKanjiDao = jlptFourKanjiDao;
+            this.miscellaneousKanjiDao = miscellaneousKanjiDao;
+        }
+
+    }
+
     public LiveData<List<JLPTOneKanjiEntry>> getAllJLPTOneKanji(){
-        return this.jlptOneKanjiList;
+        return this.jlptOneKanjiDao.getAll();
+
+        //return this.jlptOneKanjiList;
     }
     public LiveData<List<JLPTTwoKanjiEntry>> getAllJLPTTwoKanji(){
-        return this.jlptTwoKanjiList;
+        return this.jlptTwoKanjiDao.getAll();
+
+        //return this.jlptTwoKanjiList;
     }
-    public LiveData<List<JLPTThreeKanjiEntry>> getAllJLPTThreeKanji(){ return this.jlptThreeKanjiList; }
-    public LiveData<List<JLPTFourKanjiEntry>> getAllJLPTFourKanji(){ return this.jlptFourKanjiList; }
-    public LiveData<List<MiscellaneousKanjiEntry>> getAllMiscellaneousKanji(){ return this.miscellaneousKanjiList; }
+    public LiveData<List<JLPTThreeKanjiEntry>> getAllJLPTThreeKanji(){
+        return this.jlptThreeKanjiDao.getAll();
+
+        //return this.jlptThreeKanjiList;
+    }
+    public LiveData<List<JLPTFourKanjiEntry>> getAllJLPTFourKanji(){
+        return this.jlptFourKanjiDao.getAll();
+
+        //return this.jlptFourKanjiList;
+    }
+    public LiveData<List<MiscellaneousKanjiEntry>> getAllMiscellaneousKanji(){
+        return this.miscellaneousKanjiDao.getAll();
+
+        //return this.miscellaneousKanjiList;
+    }
 
     //kanjidao async classes
 
@@ -168,26 +208,6 @@ public class Kanji4URepository {
     }
 
     // we are creating a async task method to insert new course.
-    private static class GetAllKanjiEntryAsyncTask extends AsyncTask<Void, Void, List<KanjiEntry>> {
-        private KanjiDao kanjiDao;
-
-        private GetAllKanjiEntryAsyncTask(KanjiDao kanjiDao) {
-            this.kanjiDao = kanjiDao;
-        }
-
-        @Override
-        protected List<KanjiEntry> doInBackground(Void ... voids) {
-            return kanjiDao.getAll().getValue();
-        }
-
-        @Override
-        protected void onPostExecute(List<KanjiEntry> kanji){
-            super.onPostExecute(kanji);
-        }
-
-    }
-
-    // we are creating a async task method to insert new course.
     private static class FindKanjiEntryByJLPTLevelAsyncTask extends AsyncTask<Void, Void, List<KanjiEntry>> {
         private KanjiDao kanjiDao;
 
@@ -208,6 +228,101 @@ public class Kanji4URepository {
     }
 
     //jlpt ansync classes
+
+    private static class GetJLPTOneKanjiEntryAsyncTask extends AsyncTask<Void, Void, List<JLPTOneKanjiEntry>> {
+        private JLPTOneKanjiDao kanjiDao;
+
+        private GetJLPTOneKanjiEntryAsyncTask(JLPTOneKanjiDao kanjiDao) {
+            this.kanjiDao = kanjiDao;
+        }
+
+        @Override
+        protected List<JLPTOneKanjiEntry> doInBackground(Void ... voids) {
+            return kanjiDao.getAll().getValue();
+        }
+
+        @Override
+        protected void onPostExecute(List<JLPTOneKanjiEntry> kanji){
+            super.onPostExecute(kanji);
+        }
+
+    }
+
+    private static class GetJLPTTwoKanjiEntryAsyncTask extends AsyncTask<Void, Void, List<JLPTTwoKanjiEntry>> {
+        private JLPTTwoKanjiDao kanjiDao;
+
+        private GetJLPTTwoKanjiEntryAsyncTask(JLPTTwoKanjiDao kanjiDao) {
+            this.kanjiDao = kanjiDao;
+        }
+
+        @Override
+        protected List<JLPTTwoKanjiEntry> doInBackground(Void ... voids) {
+            return kanjiDao.getAll().getValue();
+        }
+
+        @Override
+        protected void onPostExecute(List<JLPTTwoKanjiEntry> kanji){
+            super.onPostExecute(kanji);
+        }
+
+    }
+
+    private static class GetJLPTThreeKanjiEntryAsyncTask extends AsyncTask<Void, Void, List<JLPTThreeKanjiEntry>> {
+        private JLPTThreeKanjiDao kanjiDao;
+
+        private GetJLPTThreeKanjiEntryAsyncTask(JLPTThreeKanjiDao kanjiDao) {
+            this.kanjiDao = kanjiDao;
+        }
+
+        @Override
+        protected List<JLPTThreeKanjiEntry> doInBackground(Void ... voids) {
+            return kanjiDao.getAll().getValue();
+        }
+
+        @Override
+        protected void onPostExecute(List<JLPTThreeKanjiEntry> kanji){
+            super.onPostExecute(kanji);
+        }
+
+    }
+
+    private static class GetJLPTFourKanjiEntryAsyncTask extends AsyncTask<Void, Void, List<JLPTFourKanjiEntry>> {
+        private JLPTFourKanjiDao kanjiDao;
+
+        private GetJLPTFourKanjiEntryAsyncTask(JLPTFourKanjiDao kanjiDao) {
+            this.kanjiDao = kanjiDao;
+        }
+
+        @Override
+        protected List<JLPTFourKanjiEntry> doInBackground(Void ... voids) {
+            return kanjiDao.getAll().getValue();
+        }
+
+        @Override
+        protected void onPostExecute(List<JLPTFourKanjiEntry> kanji){
+            super.onPostExecute(kanji);
+        }
+
+    }
+
+    private static class GetMiscellaneousKanjiEntryAsyncTask extends AsyncTask<Void, Void, List<MiscellaneousKanjiEntry>> {
+        private MiscellaneousKanjiDao kanjiDao;
+
+        private GetMiscellaneousKanjiEntryAsyncTask(MiscellaneousKanjiDao kanjiDao) {
+            this.kanjiDao = kanjiDao;
+        }
+
+        @Override
+        protected List<MiscellaneousKanjiEntry> doInBackground(Void ... voids) {
+            return kanjiDao.getAll().getValue();
+        }
+
+        @Override
+        protected void onPostExecute(List<MiscellaneousKanjiEntry> kanji){
+            super.onPostExecute(kanji);
+        }
+
+    }
 
     ///jlpt 1
     private static class InsertJLPTOneKanjiEntryAsyncTask extends AsyncTask<JLPTOneKanjiEntry, Void, Void> {

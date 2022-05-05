@@ -16,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 @TypeConverters({DatabaseConverters.class})
 public abstract class Kanji4UDatabase extends RoomDatabase {
 
-    public abstract KanjiDao kanjiDao(); //To-Do: Remove
+    public abstract KanjiDao kanjiDao();
 
     public abstract JLPTOneKanjiDao jlptOneKanjiDao();
     public abstract JLPTTwoKanjiDao jlptTwoKanjiDao();
