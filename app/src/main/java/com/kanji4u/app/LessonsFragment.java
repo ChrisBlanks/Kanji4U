@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -76,38 +77,51 @@ public class LessonsFragment extends Fragment {
 
         if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(0)) ){         //JLPT level 4
 
-            dbViewModal.getAllJLPTFourKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTFourKanjiEntry>>() {
+            LiveData<List<JLPTFourKanjiEntry>> jlpt4Data = this.dbViewModal.getAllJLPTFourKanji();
+            jlpt4Data.observe(getViewLifecycleOwner(), new Observer<List<JLPTFourKanjiEntry>>() {
                 @Override
                 public void onChanged(List<JLPTFourKanjiEntry> jlptFourKanjiEntries) {
+                    Log.i("Lessons Query","JLPT 4 kanji is being processed");
                     processKanji(view, jlptFourKanjiEntries);
+                    jlpt4Data.removeObserver(this);
                 }
 
             });
         } else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(1))){
-            dbViewModal.getAllJLPTThreeKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTThreeKanjiEntry>>() {
+            LiveData<List<JLPTThreeKanjiEntry>> jlpt3Data = this.dbViewModal.getAllJLPTThreeKanji();
+            jlpt3Data.observe(getViewLifecycleOwner(), new Observer<List<JLPTThreeKanjiEntry>>() {
                 @Override
                 public void onChanged(List<JLPTThreeKanjiEntry> jlptThreeKanjiEntries) {
+                    Log.i("Lessons Query","JLPT 3 kanji is being processed");
                     processKanji(view, jlptThreeKanjiEntries);
+                    jlpt3Data.removeObserver(this);
                 }
 
             });
         }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(2))){
-            dbViewModal.getAllJLPTTwoKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTTwoKanjiEntry>>() {
+            LiveData<List<JLPTTwoKanjiEntry>> jlpt2Data = this.dbViewModal.getAllJLPTTwoKanji();
+            jlpt2Data.observe(getViewLifecycleOwner(), new Observer<List<JLPTTwoKanjiEntry>>() {
                 @Override
                 public void onChanged(List<JLPTTwoKanjiEntry> jlptTwoKanjiEntries) {
+                    Log.i("Lessons Query","JLPT 2 kanji is being processed");
                     processKanji(view, jlptTwoKanjiEntries);
+                    jlpt2Data.removeObserver(this);
                 }
 
             });
         }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(3))){
-            dbViewModal.getAllJLPTOneKanji().observe(getViewLifecycleOwner(), new Observer<List<JLPTOneKanjiEntry>>() {
+            LiveData<List<JLPTOneKanjiEntry>> jlpt1Data = this.dbViewModal.getAllJLPTOneKanji();
+            jlpt1Data.observe(getViewLifecycleOwner(), new Observer<List<JLPTOneKanjiEntry>>() {
                 @Override
                 public void onChanged(List<JLPTOneKanjiEntry> jlptOneKanjiEntries) {
+                    Log.i("Lessons Query","JLPT 1 kanji is being processed");
                     processKanji(view, jlptOneKanjiEntries);
+                    jlpt1Data.removeObserver(this);
                 }
 
             });
         }else if(jlptLevel.equals(LessonNavigationFragment.ROW_NAMES.get(4))){
+            //LiveData<List<MiscellaneousKanjiEntry>> miscellaneousData = this.dbViewModal.getAllMiscellaneousKanji();
             dbViewModal.getAllMiscellaneousKanji().observe(getViewLifecycleOwner(), new Observer<List<MiscellaneousKanjiEntry>>() {
                 @Override
                 public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
