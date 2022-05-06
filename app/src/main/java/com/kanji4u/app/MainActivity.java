@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -86,11 +88,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         //database loading
+
         this.dbViewModal = new ViewModelProvider(this).get(DatabaseViewModal.class);
-        this.dbViewModal.getAllJLPTOneKanji().observe(this, new Observer<List<JLPTOneKanjiEntry>>() {
+
+        LiveData<List<JLPTOneKanjiEntry>> jlpt1Data = this.dbViewModal.getAllJLPTOneKanji();
+        jlpt1Data.observe(this, new Observer<List<JLPTOneKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTOneKanjiEntry> jlptOneKanjiEntries) {
-                if(jlptOneKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                if(jlptOneKanjiEntries.size() < 1){ //if no jlpt4Data in database, load kanji dictionary from file & store
                     if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
                         loadKanjiDictionary();
                     }
@@ -100,17 +105,20 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTOneKanjiEntry(), KanjiEntryType.JLPT1KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 1 Kanji has finished loading into database.");
+                    Log.i("Initial Database Loading","JLPT 1 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 1 Kanji has been loaded already, so no action needed");
+                    Log.i("Initial Database Loading","JLPT 1 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt1Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllJLPTTwoKanji().observe(this, new Observer<List<JLPTTwoKanjiEntry>>() {
+        LiveData<List<JLPTTwoKanjiEntry>> jlpt2Data = this.dbViewModal.getAllJLPTTwoKanji();
+        jlpt2Data.observe(this, new Observer<List<JLPTTwoKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTTwoKanjiEntry> jlptTwoKanjiEntries) {
-                if(jlptTwoKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                if(jlptTwoKanjiEntries.size() < 1){ //if no jlpt4Data in database, load kanji dictionary from file & store
                     if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
                         loadKanjiDictionary();
                     }
@@ -120,17 +128,20 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTTwoKanjiEntry(), KanjiEntryType.JLPT2KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 2 Kanji has finished loading into database.");
+                    Log.i("Initial Database Loading","JLPT 2 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 2 Kanji has been loaded already, so no action needed");
+                    Log.i("Initial Database Loading","JLPT 2 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt2Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllJLPTThreeKanji().observe(this, new Observer<List<JLPTThreeKanjiEntry>>() {
+        LiveData<List<JLPTThreeKanjiEntry>> jlpt3Data = this.dbViewModal.getAllJLPTThreeKanji();
+        jlpt3Data.observe(this, new Observer<List<JLPTThreeKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTThreeKanjiEntry> jlptThreeKanjiEntries) {
-                if( jlptThreeKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                if( jlptThreeKanjiEntries.size() < 1){ //if no jlpt4Data in database, load kanji dictionary from file & store
                     if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
                         loadKanjiDictionary();
                     }
@@ -140,17 +151,20 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTThreeKanjiEntry(), KanjiEntryType.JLPT3KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 3 Kanji has finished loading into database.");
+                    Log.i("Initial Database Loading","JLPT 3 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 3 Kanji has been loaded already, so no action needed");
+                    Log.i("Initial Database Loading","JLPT 3 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt3Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllJLPTFourKanji().observe(this, new Observer<List<JLPTFourKanjiEntry>>() {
+        LiveData<List<JLPTFourKanjiEntry>> jlpt4Data = this.dbViewModal.getAllJLPTFourKanji();
+        jlpt4Data.observe(this, new Observer<List<JLPTFourKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTFourKanjiEntry> jlptFourKanjiEntries) {
-                if(jlptFourKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                if(jlptFourKanjiEntries.size() < 1){ //if no jlpt4Data in database, load kanji dictionary from file & store
                     if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
                         loadKanjiDictionary();
                     }
@@ -160,17 +174,19 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTFourKanjiEntry(), KanjiEntryType.JLPT4KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 4 Kanji has finished loading into database.");
+                    Log.i("Initial Database Loading","JLPT 4 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 4 Kanji has been loaded already, so no action needed");
+                    Log.i("Initial Database Loading","JLPT 4 Kanji has been loaded already, so no action needed");
                 }
+                jlpt4Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllMiscellaneousKanji().observe(this, new Observer<List<MiscellaneousKanjiEntry>>() {
+        LiveData<List<MiscellaneousKanjiEntry>> miscellaneousData = this.dbViewModal.getAllMiscellaneousKanji();
+        miscellaneousData.observe(this, new Observer<List<MiscellaneousKanjiEntry>>() {
             @Override
             public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
-                if(miscellaneousKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
+                if(miscellaneousKanjiEntries.size() < 1){ //if no jlpt4Data in database, load kanji dictionary from file & store
                     if( kanjiDict == null || kanjiDict.getNumberOfKanjiLoaded() < 1){ //if no kanji loaded, load all kanji
                         loadKanjiDictionary();
                     }
@@ -180,12 +196,15 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createMisceallaneousKanjiEntry(), KanjiEntryType.MISCELLANEOUSKANJI);
                         }
                     }
-                    Log.i("Database","Miscellaneous Kanji has finished loading into database.");
+                    Log.i("Initial Database Loading","Miscellaneous Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","Miscellaneous Kanji has been loaded already, so no action needed");
+                    Log.i("Initial Database Loading","Miscellaneous Kanji has been loaded already, so no action needed");
                 }
+
+                miscellaneousData.removeObserver(this);
             }
         });
+
 
     }
 
@@ -260,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reloadDatabase(){
-        Log.i("Delete All Kanji", "Deleting all kanji.");
+        Log.i("Reloading Database", "Deleting all kanji.");
 
         Runnable deleteAllRunnable = new Runnable() {
             @Override
@@ -271,8 +290,10 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(deleteAllRunnable);
         thread.start();
 
-        Log.i("Delete All Kanji", "Repopulate tables");
-        this.dbViewModal.getAllJLPTOneKanji().observe(this, new Observer<List<JLPTOneKanjiEntry>>() {
+        Log.i("Reloading Database", "Repopulate tables");
+
+        LiveData<List<JLPTOneKanjiEntry>> jlpt1Data = this.dbViewModal.getAllJLPTOneKanji();
+        jlpt1Data.observe(this, new Observer<List<JLPTOneKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTOneKanjiEntry> jlptOneKanjiEntries) {
                 if(jlptOneKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
@@ -285,14 +306,17 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTOneKanjiEntry(), KanjiEntryType.JLPT1KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 1 Kanji has finished loading into database.");
+                    Log.i("Reloading Database","JLPT 1 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 1 Kanji has been loaded already, so no action needed");
+                    Log.i("Reloading Database","JLPT 1 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt1Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllJLPTTwoKanji().observe(this, new Observer<List<JLPTTwoKanjiEntry>>() {
+        LiveData<List<JLPTTwoKanjiEntry>> jlpt2Data = this.dbViewModal.getAllJLPTTwoKanji();
+        jlpt2Data.observe(this, new Observer<List<JLPTTwoKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTTwoKanjiEntry> jlptTwoKanjiEntries) {
                 if(jlptTwoKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
@@ -305,14 +329,17 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTTwoKanjiEntry(), KanjiEntryType.JLPT2KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 2 Kanji has finished loading into database.");
+                    Log.i("Reloading Database","JLPT 2 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 2 Kanji has been loaded already, so no action needed");
+                    Log.i("Reloading Database","JLPT 2 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt2Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllJLPTThreeKanji().observe(this, new Observer<List<JLPTThreeKanjiEntry>>() {
+        LiveData<List<JLPTThreeKanjiEntry>> jlpt3Data = this.dbViewModal.getAllJLPTThreeKanji();
+        jlpt3Data.observe(this, new Observer<List<JLPTThreeKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTThreeKanjiEntry> jlptThreeKanjiEntries) {
                 if( jlptThreeKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
@@ -325,14 +352,17 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTThreeKanjiEntry(), KanjiEntryType.JLPT3KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 3 Kanji has finished loading into database.");
+                    Log.i("Reloading Database","JLPT 3 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 3 Kanji has been loaded already, so no action needed");
+                    Log.i("Reloading Database","JLPT 3 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt3Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllJLPTFourKanji().observe(this, new Observer<List<JLPTFourKanjiEntry>>() {
+        LiveData<List<JLPTFourKanjiEntry>> jlpt4Data = this.dbViewModal.getAllJLPTFourKanji();
+        jlpt4Data.observe(this, new Observer<List<JLPTFourKanjiEntry>>() {
             @Override
             public void onChanged(List<JLPTFourKanjiEntry> jlptFourKanjiEntries) {
                 if(jlptFourKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
@@ -345,14 +375,17 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createJLPTFourKanjiEntry(), KanjiEntryType.JLPT4KANJI);
                         }
                     }
-                    Log.i("Database","JLPT 4 Kanji has finished loading into database.");
+                    Log.i("Reloading Database","JLPT 4 Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","JLPT 4 Kanji has been loaded already, so no action needed");
+                    Log.i("Reloading Database","JLPT 4 Kanji has been loaded already, so no action needed");
                 }
+
+                jlpt4Data.removeObserver(this);
             }
         });
 
-        this.dbViewModal.getAllMiscellaneousKanji().observe(this, new Observer<List<MiscellaneousKanjiEntry>>() {
+        LiveData<List<MiscellaneousKanjiEntry>> miscellaneousData = this.dbViewModal.getAllMiscellaneousKanji();
+        miscellaneousData.observe(this, new Observer<List<MiscellaneousKanjiEntry>>() {
             @Override
             public void onChanged(List<MiscellaneousKanjiEntry> miscellaneousKanjiEntries) {
                 if(miscellaneousKanjiEntries.size() < 1){ //if no data in database, load kanji dictionary from file & store
@@ -365,14 +398,16 @@ public class MainActivity extends AppCompatActivity {
                             dbViewModal.insert(kanji.createMisceallaneousKanjiEntry(), KanjiEntryType.MISCELLANEOUSKANJI);
                         }
                     }
-                    Log.i("Database","Miscellaneous Kanji has finished loading into database.");
+                    Log.i("Reloading Database","Miscellaneous Kanji has finished loading into database.");
                 } else{
-                    Log.i("Database","Miscellaneous Kanji has been loaded already, so no action needed");
+                    Log.i("Reloading Database","Miscellaneous Kanji has been loaded already, so no action needed");
                 }
+
+                miscellaneousData.removeObserver(this);
             }
         });
 
-        Log.i("Delete All Kanji", "Navigate to home");
+        Log.i("Reloading Database", "Navigate to parent fragment");
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         navController.navigateUp();
